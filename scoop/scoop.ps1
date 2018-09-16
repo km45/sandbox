@@ -23,7 +23,7 @@ else {
 # Install packages
 # -----------------------------------------------------------------------------
 $packages = @(
-    # 'git',  # Cannot use Windows Explorer integration "Git Bash Here".
+    'git-with-openssh',
     'jq',
     'vagrant'
 )
@@ -41,3 +41,9 @@ foreach ($package in $packages) {
         scoop install $package
     }
 }
+
+# -----------------------------------------------------------------------------
+# Post processes
+# -----------------------------------------------------------------------------
+git config --global core.autocrlf false
+LOGI("You need apply ssh config if newly install or update git.")
