@@ -24,7 +24,8 @@ else {
 # -----------------------------------------------------------------------------
 $packages = @(
     # 'git',  # Cannot use Windows Explorer integration "Git Bash Here".
-    'jq'
+    'jq',
+    'vagrant'
 )
 foreach ($package in $packages) {
     LOGD("Check whether $package is already installed or not.")
