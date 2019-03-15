@@ -25,6 +25,7 @@ else {
 $packages = @(
     'git-with-openssh',
     'jq',
+    'python',
     'vagrant'
 )
 foreach ($package in $packages) {
