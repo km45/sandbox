@@ -20,13 +20,19 @@ else {
 }
 
 # -----------------------------------------------------------------------------
+# Add buckets
+# -----------------------------------------------------------------------------
+scoop bucket add extras
+
+# -----------------------------------------------------------------------------
 # Install packages
 # -----------------------------------------------------------------------------
 $packages = @(
     'git-with-openssh',
     'jq',
     'python',
-    'vagrant'
+    'vagrant',
+    'winmerge'
 )
 foreach ($package in $packages) {
     LOGD("Check whether $package is already installed or not.")
