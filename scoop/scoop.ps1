@@ -28,6 +28,7 @@ scoop bucket add extras
 # Install packages
 # -----------------------------------------------------------------------------
 $packages = @(
+    'consolez',
     'git-with-openssh',
     'jq',
     'python',
