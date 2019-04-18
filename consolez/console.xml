@@ -186,6 +186,11 @@
 		</tab>
 		<tab title="PowerShell" icon="powershell.exe" use_default_icon="0">
 			<console shell="powershell.exe" init_dir="" priority="2" run_as_user="0" user="" net_only="0" run_as_admin="0"/>
+			<background type="0" r="1" g="36" b="86">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
 		</tab>
 		<tab title="CommandPrompt" icon="cmd.exe" use_default_icon="0">
 			<console shell="cmd.exe" init_dir="" priority="2" run_as_user="0" user="" net_only="0" run_as_admin="0"/>
