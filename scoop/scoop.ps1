@@ -41,6 +41,7 @@ $packages = @(
     'consolez',
     'git-with-openssh',
     'jq',
+    'libreoffice-fresh',
     'python',
     'vagrant',
     'winmerge'
