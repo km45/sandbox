@@ -25,8 +25,18 @@ else {
 scoop bucket add extras
 
 # -----------------------------------------------------------------------------
+# Update packages
+# -----------------------------------------------------------------------------
+LOGI("Update packages")
+scoop update *
+
+# -----------------------------------------------------------------------------
 # Install packages
 # -----------------------------------------------------------------------------
+function IsInstalled($package) {
+    return (scoop list 6>&1 | Select-String -SimpleMatch -Quiet $package)
+}
+
 $packages = @(
     'consolez',
     'git-with-openssh',
@@ -35,17 +45,15 @@ $packages = @(
     'vagrant',
     'winmerge'
 )
+
 foreach ($package in $packages) {
-    LOGD("Check whether $package is already installed or not.")
-    $installed = (scoop list 6>&1 | Select-String -SimpleMatch -Quiet $package)
-    LOGD("--> $installed")
+    $installed = IsInstalled($package)
 
     if ($installed) {
-        echo "Update $package"
-        scoop update $package
+        LOGD("Already installed $package")
     }
     else {
-        echo "Install $package"
+        LOGI("Install $package")
         scoop install $package
     }
 }
