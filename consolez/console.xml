@@ -79,6 +79,7 @@
 		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="0" command="movetabright"/>
 		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="0" command="closetab"/>
 		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="0" command="renametab"/>
+		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="0" command="clonetab"/>
 		<hotkey ctrl="1" shift="0" alt="0" extended="1" code="34" command="nextview"/>
 		<hotkey ctrl="1" shift="0" alt="0" extended="1" code="33" command="prevview"/>
 		<hotkey ctrl="0" shift="0" alt="1" extended="1" code="37" command="leftview"/>
@@ -98,6 +99,7 @@
 		<hotkey ctrl="1" shift="0" alt="0" extended="1" code="39" command="splitvert"/>
 		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="0" command="splitswap"/>
 		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="0" command="clone"/>
+		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="0" command="moveinnewtab"/>
 		<hotkey ctrl="0" shift="0" alt="0" extended="0" code="122" command="fullscreen"/>
 		<hotkey ctrl="1" shift="0" alt="0" extended="0" code="96" command="zoom100"/>
 		<hotkey ctrl="1" shift="0" alt="0" extended="0" code="107" command="zoominc"/>
@@ -194,5 +196,8 @@
 		</tab>
 		<tab title="CommandPrompt" icon="cmd.exe" use_default_icon="0">
 			<console shell="cmd.exe" init_dir="" priority="2" run_as_user="0" user="" net_only="0" run_as_admin="0"/>
+		</tab>
+		<tab title="MSYS2 MSYS" icon="%USERPROFILE%\scoop\apps\msys2\current\msys2.exe" use_default_icon="0">
+			<console shell="&quot;%USERPROFILE%\scoop\apps\msys2\current\usr\bin\bash.exe&quot; --login -i -c 'MSYSTEM=MSYS exec bash'" init_dir="" priority="2" run_as_user="0" user="" net_only="0" run_as_admin="0"/>
 		</tab>
 	</tabs></settings>
