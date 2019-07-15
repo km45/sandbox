@@ -45,6 +45,7 @@ $packages = @(
     'msys2',
     'python',
     'vagrant',
+    'vscode-portable',
     'winmerge'
 )
 
