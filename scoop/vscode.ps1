@@ -1,9 +1,12 @@
 function main() {
-    # Download script
-    Invoke-WebRequest -Uri "https://gist.githubusercontent.com/km45/eea6c905a8f025cad1cdb37dd292568e/raw/b0120722200b701af2ce0f40ce4d1f7d8edf841f/install_vscode_plugins.sh" -OutFile "install_vscode_plugins.sh"
+    # Download list file
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/km45/linux-devenv/master/src/playbooks/roles/vscode/vars/main.yml" -OutFile "vscode_extensions.yml"
 
-    # Run script
-    & "${env:USERPROFILE}/scoop/apps/git-with-openssh/current/bin/bash.exe" install_vscode_plugins.sh
+    # Construct environment
+    & pipenv sync
+
+    # Install plugins
+    & pipenv run -- python install_vscode_extensions.py vscode_extensions.yml
 }
 
 main

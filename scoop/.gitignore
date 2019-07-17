@@ -1,1 +1,4 @@
-/install_vscode_plugins.sh
+/vscode_extensions.yml
+
+/.mypy_cache
+/.vscode
