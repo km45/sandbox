@@ -189,9 +189,6 @@
 		<tab title="CommandPrompt" icon="cmd.exe" use_default_icon="0">
 			<console shell="cmd.exe" init_dir="" priority="2" run_as_user="0" user="" net_only="0" run_as_admin="0"/>
 		</tab>
-		<tab title="PowerShell Core" icon="C:\Program Files\PowerShell\6\pwsh.exe" use_default_icon="0">
-			<console shell="C:\Program Files\PowerShell\6\pwsh.exe" init_dir="" priority="2" run_as_user="0" user="" net_only="0" run_as_admin="0"/>
-		</tab>
 		<tab title="MSYS2 MSYS" icon="%USERPROFILE%\scoop\apps\msys2\current\msys2.exe" use_default_icon="0">
 			<console shell="&quot;%USERPROFILE%\scoop\apps\msys2\current\usr\bin\bash.exe&quot; --login -i -c 'MSYSTEM=MSYS exec bash'" init_dir="" priority="2" run_as_user="0" user="" net_only="0" run_as_admin="0"/>
 		</tab>
