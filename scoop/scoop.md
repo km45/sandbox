@@ -21,7 +21,7 @@ scoop bucket add extras
 scoop install git-with-openssh
 git config --global core.autocrlf false
 scoop install aria2
-scoop install consolez jq libreoffice-fresh msys2 python vagrant vscode-portable winmerge
+scoop install consolez jq libreoffice-fresh python vagrant vscode-portable winmerge
 ```
 
 ## Update scoop and packages
