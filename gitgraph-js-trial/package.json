@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@gitgraph/js": "^1.4.0"
+  }
+}
