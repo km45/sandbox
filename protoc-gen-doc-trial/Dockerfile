@@ -4,25 +4,20 @@ RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         ca-certificates \
         curl \
-        g++ \
         git \
         make \
+        unzip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #
 # Protocol Buffers
 #
-ENV PROTOBUF_VERSION 2.6.0
+ENV PROTOBUF_VERSION 3.17.3
 
-RUN curl -fSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-${PROTOBUF_VERSION}.tar.gz" | tar zxv \
-    && cd protobuf-${PROTOBUF_VERSION} \
-    && ./configure \
-    && make \
-    && make check \
-    && make install \
-    && cd / \
-    && rm -rf protobuf-${PROTOBUF_VERSION} \
-    && ldconfig
+RUN curl -fSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip" > protobuf.zip \
+    && unzip -p protobuf.zip bin/protoc > /usr/local/bin/protoc \
+    && chmod +x /usr/local/bin/protoc \
+    && rm -f protobuf.zip
 
 #
 # Go
