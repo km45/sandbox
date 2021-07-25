@@ -7,7 +7,6 @@ Trial for [protoc-gen-doc].
 ## Environment
 
 * Use `protobuf 2.6.0` on docker.
-* Use the docker image based on `buildpack-deps:trusty`.
 
 ## Remarks
 

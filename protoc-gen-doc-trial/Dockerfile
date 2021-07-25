@@ -1,6 +1,14 @@
-FROM buildpack-deps:trusty
+FROM debian:10
 
-RUN sed -i 's,archive.ubuntu.com,ftp.riken.jp/Linux,g' /etc/apt/sources.list
+# RUN sed -i 's,archive.ubuntu.com,ftp.riken.jp/Linux,g' /etc/apt/sources.list
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+        curl \
+        g++ \
+        git \
+        make \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #
 # Protocol Buffers
@@ -20,7 +28,7 @@ RUN curl -fSL "https://github.com/protocolbuffers/protobuf/releases/download/v${
 #
 # Go
 #
-ENV GO_VERSION 1.11
+ENV GO_VERSION 1.16
 
 RUN curl -fSL "https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz" | tar zxv \
     && mv go /usr/local/go
