@@ -1,7 +1,5 @@
 FROM debian:10
 
-# RUN sed -i 's,archive.ubuntu.com,ftp.riken.jp/Linux,g' /etc/apt/sources.list
-
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         ca-certificates \
