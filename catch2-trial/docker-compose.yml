@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  develop:
+    build:
+      context: .
+    working_dir: /usr/src/app
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src/app
