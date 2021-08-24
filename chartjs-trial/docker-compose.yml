@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  develop:
+    image: node
+    command: ["tail", "-f", "/dev/null"]
+    environment:
+      - HOME=/usr/src/app/cache/develop/home
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
