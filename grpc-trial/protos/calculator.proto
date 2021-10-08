@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package calculator;
+
+service ConvexHullCalculator {
+  rpc Calculate(ConvexHullRequest) returns (ConvexHullReply) {}
+}
+
+message Point {
+  double x = 1;
+  double y = 2;
+}
+
+message ConvexHullRequest { repeated Point points = 1; }
+
+message ConvexHullReply { repeated Point vertexes = 1; }
