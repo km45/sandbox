@@ -1,6 +1,8 @@
 # grpc-trial
 
-## setup environment
+## Python
+
+### setup environment
 
 Setup python environment using `requirements.txt` as below.
 
@@ -13,22 +15,52 @@ pip install -r requirements.txt
 source venv/bin/activate
 ```
 
-## generate files by protoc
+### generate files by protoc
 
 ```sh
 python -m grpc_tools.protoc -I protos --python_out=. --grpc_python_out=. --mypy_out=. --mypy_grpc_out=. protos/calculator.proto
 ```
 
-## run
-
-### server
+### run server
 
 ```sh
 python -m convex_hull_calculator_servicer
 ```
 
-### client
+### run Python client
 
 ```sh
 python -m convex_hull_calculator_client
+```
+
+## C++
+
+### setup build environment
+
+```sh
+# create docker image if necessary and start service
+make up
+
+# enter docker container
+make shell
+```
+
+### build
+
+```sh
+# inside docker container
+make build
+```
+
+### teardown build environment
+
+```sh
+# outside docker container
+make down
+```
+
+### run C++ client
+
+```sh
+./build/Release/convex_hull_calculator_client
 ```
