@@ -30,7 +30,7 @@ python -m convex_hull_calculator_servicer
 ### run Python client
 
 ```sh
-python -m convex_hull_calculator_client
+python -m convex_hull_calculator_client < points.dat
 ```
 
 ## C++
@@ -62,5 +62,16 @@ make down
 ### run C++ client
 
 ```sh
-./build/Release/convex_hull_calculator_client
+./build/Release/convex_hull_calculator_client < points.dat
+```
+
+## Plot result
+
+```sh
+# run one of clients and convert output to gnuplot data
+python -m convex_hull_calculator_client < points.dat | jq -r '.[] | @sh' > convex_hull.dat
+./build/Release/convex_hull_calculator_client < points.dat | jq -r '.[] | @sh' > convex_hull.dat
+
+# plot data using gnuplot
+gnuplot plot.gnuplot
 ```

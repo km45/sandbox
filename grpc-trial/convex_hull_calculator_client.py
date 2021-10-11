@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import grpc
 
@@ -13,20 +14,11 @@ def run():
 
         logging.debug(f"Show value of variable request:\n{request}")
 
-        sample_input = [
-            [0, 0],
-            [1, 0],
-            [2, 0],
-            [3, 0],
-            [4, 0],
-            [0, 1],
-            [1, 1],
-            [2, 1],
-            [3, 1],
-            [1, 2],
-            [2, 2],
+        points = [
+            [float(values[0]), float(values[1])]
+            for values in [line.split(" ") for line in sys.stdin]
         ]
-        for p in sample_input:
+        for p in points:
             request.points.append(calculator_pb2.Point(x=p[0], y=p[1]))
             logging.debug(f"Show value of variable request:\n{request}")
 

@@ -2,9 +2,18 @@
 
 #include "calculator.grpc.pb.h"
 
-std::vector<std::array<double, 2>> kPoints = {{0, 0}, {1, 0}, {2, 0}, {3, 0},
-                                              {4, 0}, {0, 1}, {1, 1}, {2, 1},
-                                              {3, 1}, {1, 2}, {2, 2}};
+std::vector<std::array<double, 2>> LoadPoints() {
+  std::vector<std::array<double, 2>> points;
+
+  double x;
+  double y;
+
+  while (std::cin >> x >> y) {
+    points.emplace_back(std::array<double, 2>({x, y}));
+  }
+
+  return points;
+}
 
 int main() {
   std::unique_ptr<calculator::ConvexHullCalculator::Stub> stub =
@@ -16,7 +25,9 @@ int main() {
             << "\n"
             << request.DebugString() << std::endl;
 
-  for (const auto& point : kPoints) {
+  const auto& points = LoadPoints();
+
+  for (const auto& point : points) {
     auto* p = request.add_points();
     p->set_x(point[0]);
     p->set_y(point[1]);
