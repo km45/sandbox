@@ -18,3 +18,7 @@ build:
 .PHONY: lint-proto
 lint-proto:
 	docker run --volume "$$(pwd)/protos:/workspace" --workdir /workspace bufbuild/buf lint
+
+.PHONY: doc
+doc:
+	docker run --rm -v $$(pwd)/doc:/out -v $$(pwd)/protos:/protos pseudomuto/protoc-gen-doc
