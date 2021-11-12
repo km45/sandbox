@@ -1,0 +1,23 @@
+digraph data_flow_diagram {
+    start [shape=box]
+    end [shape=box]
+
+    start -> pre1 [label = "data1_1"]
+    start -> pre2 [label = "data2_1"]
+
+    pre1 -> main [label = "data1_2"]
+    pre2 -> main [label = "data2_2"]
+
+    readonly_database1 [shape=cylinder]
+    log_database1 [shape=cylinder]
+
+    readonly_database1 -> pre2 [label = "query result"]
+    pre2 -> log_database1
+
+    main -> post1 [label = "data3"]
+    main -> post2 [label = "data3"]
+    main -> post3 [label = "data3"]
+    post1 -> end [label = "data4"]
+    post2 -> end [label = "data5"]
+    post3 -> end [label = "data6"]
+}
