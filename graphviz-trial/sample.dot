@@ -12,7 +12,7 @@ digraph data_flow_diagram {
     log_database1 [shape=cylinder]
 
     readonly_database1 -> pre2 [label = "query result"]
-    pre2 -> log_database1
+    pre2 -> log_database1 [label = "log"]
 
     main -> post1 [label = "data3"]
     main -> post2 [label = "data3"]
