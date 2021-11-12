@@ -20,4 +20,13 @@ digraph data_flow_diagram {
     post1 -> end [label = "data4"]
     post2 -> end [label = "data5"]
     post3 -> end [label = "data6"]
+
+    subgraph cluster {
+        label = "legends"
+        legends0 [shape=box, label="terminator"]
+        legends1 [label="process"]
+        legends2 [shape=cylinder, label="datastore"]
+        legends0 -> legends1 [label="dataflow"]
+        legends1 -> legends2 [style=invis]
+    }
 }
