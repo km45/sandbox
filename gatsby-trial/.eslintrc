@@ -1,0 +1,11 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+    ],
+    "rules": {
+        // Gatsby's required rules
+        "no-anonymous-exports-page-templates": "warn",
+        "limited-exports-page-templates": "warn"
+    }
+}

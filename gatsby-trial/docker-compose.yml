@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  develop:
+    image: node:17-bullseye
+    command: ["tail", "-f", "/dev/null"]
+    environment:
+      - HOME=/usr/src/app/cache/develop/home
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8000"
+    working_dir: /usr/src/app
