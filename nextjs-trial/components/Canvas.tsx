@@ -35,8 +35,6 @@ export function Canvas({ nodes, edges }: Props) {
                 g.addEdge(edge.start_node_id, edge.end_node_id, { size: edge.size, color: edge.color });
         }
         return (
-                <SigmaContainer
-                        style={{ height: "750px", width: "750px" }}
-                        graph={g} />
+                <SigmaContainer graph={g} />
         );
 }
