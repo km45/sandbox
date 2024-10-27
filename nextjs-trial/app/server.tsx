@@ -13,15 +13,15 @@ export async function generateGraphOnServer(prompts: string[]) {
                 const a = parseInt(prompt)
 
                 if (a == 1) {
-                        nodes.push({ id: "1", label: "Node 1", x: 0, y: 0, size: 10, });
+                        nodes.push({ id: "1", label: "Node 1", x: 0, y: 0 });
                         flag1 = true;
                 }
                 if (a == 2) {
-                        nodes.push({ id: "2", label: "Node 2", x: 1, y: 1, size: 20, });
+                        nodes.push({ id: "2", label: "Node 2", x: 1, y: 1 });
                         flag2 = true;
                 }
                 if (a == 3) {
-                        nodes.push({ id: "3", label: "Node 3", x: 1, y: 2, size: 30 });
+                        nodes.push({ id: "3", label: "Node 3", x: 1, y: 2 });
                 }
         }
 

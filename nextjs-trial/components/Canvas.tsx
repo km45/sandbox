@@ -12,7 +12,6 @@ export type Node = {
         label: string;
         x: Number;
         y: Number;
-        size: Number;
 }
 
 export type Edge = {
@@ -35,7 +34,8 @@ function calcCurvature(index: number) {
 export function Canvas({ nodes, edges }: Props) {
         const g = new MultiGraph();
         for (const node of nodes) {
-                g.addNode(node.id, { label: node.label, x: node.x, y: node.y, size: node.size });
+                const SIZE = 20;
+                g.addNode(node.id, { label: node.label, x: node.x, y: node.y, size: SIZE });
         }
 
         const groups = Map.groupBy(edges, (edge) => { return edge.start_node_id + "_" + edge.end_node_id });
