@@ -11,7 +11,6 @@ export type Node = {
         x: Number;
         y: Number;
         size: Number;
-        color: string;
 }
 
 export type Edge = {
@@ -29,7 +28,7 @@ export type Props = {
 export function Canvas({ nodes, edges }: Props) {
         const g = new Graph();
         for (const node of nodes) {
-                g.addNode(node.id, { label: node.label, x: node.x, y: node.y, size: node.size, color: node.color });
+                g.addNode(node.id, { label: node.label, x: node.x, y: node.y, size: node.size });
         }
         for (const edge of edges) {
                 g.addEdge(edge.start_node_id, edge.end_node_id, { size: edge.size, color: edge.color });
