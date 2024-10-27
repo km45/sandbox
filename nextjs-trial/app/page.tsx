@@ -52,7 +52,7 @@ export default function Home() {
       </div>
       <Drawer open={visible} onClickOverlay={() => setVisible(!visible)} side={
         <Join vertical={true}>
-          {prompts.map(prompt => <Button id={prompt} onClick={(e) => setPrompts(prompts.filter((p) => { return p != e.target.id }))}>{prompt}</Button>)}
+          {prompts.map((prompt, index) => <Button key={index} id={prompt} onClick={(e) => setPrompts(prompts.filter((p) => { return p != e.target.id }))}>{prompt}</Button>)}
         </Join>
       } />
     </main >
