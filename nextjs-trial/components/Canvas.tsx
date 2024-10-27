@@ -31,9 +31,10 @@ export function Canvas({ nodes, edges }: Props) {
                 g.addNode(node.id, { label: node.label, x: node.x, y: node.y, size: node.size });
         }
         for (const edge of edges) {
-                g.addEdge(edge.start_node_id, edge.end_node_id, { size: edge.size, color: edge.color });
+                const label = edge.start_node_id + " -> " + edge.end_node_id;
+                g.addEdge(edge.start_node_id, edge.end_node_id, { size: edge.size, color: edge.color, label: label });
         }
         return (
-                <SigmaContainer graph={g} />
+                <SigmaContainer graph={g} settings={{ renderEdgeLabels: true }} />
         );
 }
