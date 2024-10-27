@@ -21,7 +21,7 @@ export type Edge = {
 };
 
 export type Props = {
-        nodes: Node[];
+        nodes: Set<Node>;
         edges: Edge[];
 }
 

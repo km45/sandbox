@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button, Navbar, Form, Input, Join, Drawer } from "react-daisyui";
 
 export default function Home() {
-  const [nodes, setNodes] = useState<Node[]>([]);
+  const [nodes, setNodes] = useState<Set<Node>>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [visible, setVisible] = useState(false);
