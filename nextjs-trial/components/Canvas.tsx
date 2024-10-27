@@ -17,7 +17,6 @@ export type Node = {
 export type Edge = {
         start_node_id: string;
         end_node_id: string;
-        size: Number;
         color: string;
 };
 
@@ -44,7 +43,8 @@ export function Canvas({ nodes, edges }: Props) {
                 for (const [index, edge] of edges.entries()) {
                         const label = edge.start_node_id + " -> " + edge.end_node_id;
                         const curvature = calcCurvature(index);
-                        g.addEdge(edge.start_node_id, edge.end_node_id, { size: edge.size, color: edge.color, label: label, curvature: curvature });
+                        const SIZE = 5;
+                        g.addEdge(edge.start_node_id, edge.end_node_id, { size: SIZE, color: edge.color, label: label, curvature: curvature });
                 }
         }
 

@@ -26,21 +26,21 @@ export async function generateGraphOnServer(prompts: string[]) {
         }
 
         if (flag1 && flag2) {
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "red" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "blue" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "red" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "blue" });
 
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
-                edges.push({ start_node_id: "1", end_node_id: "2", size: 5, color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
+                edges.push({ start_node_id: "1", end_node_id: "2", color: "limegreen" });
 
-                edges.push({ start_node_id: "2", end_node_id: "1", size: 5, color: "green" });
-                edges.push({ start_node_id: "3", end_node_id: "1", size: 5, color: "purple" });
-                edges.push({ start_node_id: "1", end_node_id: "3", size: 5, color: "purple" });
+                edges.push({ start_node_id: "2", end_node_id: "1", color: "green" });
+                edges.push({ start_node_id: "3", end_node_id: "1", color: "purple" });
+                edges.push({ start_node_id: "1", end_node_id: "3", color: "purple" });
         }
 
         return { nodes: nodes, edges: edges };
