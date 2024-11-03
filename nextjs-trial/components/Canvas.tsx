@@ -22,7 +22,7 @@ export type Edge = {
 
 export type Props = {
         nodes: Set<Node>;
-        edges: Edge[];
+        edges: Set<Edge>;
 }
 
 function calcCurvature(index: number) {
