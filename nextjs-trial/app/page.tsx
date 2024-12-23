@@ -3,13 +3,12 @@
 import { Canvas, Edge, Node } from "../components/Canvas";
 import { generateGraphOnServer } from "./server";
 import { useState } from "react";
-import { Button, Navbar, Form, Input, Join, Drawer } from "react-daisyui";
+import { Button, Navbar, Form, Input, Menu } from "react-daisyui";
 
 export default function Home() {
   const [nodes, setNodes] = useState<Set<Node>>([]);
   const [edges, setEdges] = useState<Set<Edge>>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
-  const [visible, setVisible] = useState(false);
   const [formInput, setFormInput] = useState<string>("");
 
   async function formToGraph() {
@@ -37,7 +36,6 @@ export default function Home() {
             <Form action={addPrompt}>
               <Input name="a" placeholder="add prompt" value={formInput} onChange={(e) => setFormInput(e.target.value)} />
             </Form>
-            <Button onClick={() => setVisible(true)}>{prompts.length} prompts</Button>
           </Navbar.Center>
           <Navbar.End>
             <Form action={formToGraph}>
@@ -47,14 +45,17 @@ export default function Home() {
         </Navbar>
 
         <div className="grow">
-          <Canvas nodes={nodes} edges={edges} />
+          <div className="flex flex-row h-full">
+            <Menu>
+              <Menu.Title>prompts</Menu.Title>
+              {prompts.map((prompt, index) => <Menu.Item key={index}><Button id={prompt} onClick={(e) => setPrompts(prompts.filter((p) => { return p != e.target.id }))}>{prompt}</Button></Menu.Item>)}
+            </Menu>
+            <div className="grow">
+              <Canvas nodes={nodes} edges={edges} />
+            </div>
+          </div>
         </div>
       </div>
-      <Drawer open={visible} onClickOverlay={() => setVisible(!visible)} side={
-        <Join vertical={true}>
-          {prompts.map((prompt, index) => <Button key={index} id={prompt} onClick={(e) => setPrompts(prompts.filter((p) => { return p != e.target.id }))}>{prompt}</Button>)}
-        </Join>
-      } />
     </main >
   );
 }
