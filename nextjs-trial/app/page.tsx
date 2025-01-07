@@ -9,22 +9,25 @@ export default function Home() {
   const [nodes, setNodes] = useState<Set<Node>>([]);
   const [edges, setEdges] = useState<Set<Edge>>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
-  const [formInput, setFormInput] = useState<string>("");
 
-  async function formToGraph() {
-    const res = await generateGraphOnServer(prompts);
-    setNodes(res.nodes);
-    setEdges(res.edges);
-  }
 
   function addPrompt(formData: FormData) {
-    const a = formData.get("a");
-    if (typeof a !== "string") {
+    const prompt = formData.get("prompt");
+    if (typeof prompt !== "string") {
       return;
     }
 
-    setPrompts([...prompts, a]);
-    setFormInput("");
+    setPrompts([...prompts, prompt]);
+  }
+
+  function removePromt(index: number) {
+    setPrompts(prompts.filter((_, i) => i != index));
+  }
+
+  async function calcGraph() {
+    const res = await generateGraphOnServer(prompts);
+    setNodes(res.nodes);
+    setEdges(res.edges);
   }
 
   return (
@@ -34,11 +37,11 @@ export default function Home() {
           <Navbar.Start>tool name</Navbar.Start>
           <Navbar.Center>
             <Form action={addPrompt}>
-              <Input name="a" placeholder="add prompt" value={formInput} onChange={(e) => setFormInput(e.target.value)} />
+              <Input name="prompt" placeholder="add prompt" />
             </Form>
           </Navbar.Center>
           <Navbar.End>
-            <Form action={formToGraph}>
+            <Form action={calcGraph}>
               <Button>calc graph</Button>
             </Form>
           </Navbar.End>
@@ -48,7 +51,11 @@ export default function Home() {
           <div className="flex flex-row h-full">
             <Menu>
               <Menu.Title>prompts</Menu.Title>
-              {prompts.map((prompt, index) => <Menu.Item key={index}><Button id={prompt} onClick={(e) => setPrompts(prompts.filter((p) => { return p != e.target.id }))}>{prompt}</Button></Menu.Item>)}
+              {prompts.map((prompt, index) => <Menu.Item key={index}>
+                <Button id={prompt} onClick={() => removePromt(index)}>
+                  {prompt}
+                </Button>
+              </Menu.Item>)}
             </Menu>
             <div className="grow">
               <Canvas nodes={nodes} edges={edges} />
