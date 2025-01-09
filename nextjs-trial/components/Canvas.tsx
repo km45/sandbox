@@ -6,6 +6,7 @@ import { SigmaContainer } from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
 
 import { EdgeCurvedArrowProgram, DEFAULT_EDGE_CURVATURE } from '@sigma/edge-curve';
+import { EdgeArrowProgram } from 'sigma/rendering';
 
 export type NodeValue = {
         label: string;
@@ -41,21 +42,37 @@ export function Canvas({ nodes, edges }: Props) {
                 g.addNode(key, { label: value.label, x: value.x, y: value.y, size: SIZE });
         }
 
-        const groups = Map.groupBy(Object.values(edges), (edge) => { return edge.startNodeId + "_" + edge.endNodeId });
+        const groups = Map.groupBy(Object.values(edges), (edge) => {
+                const nodeId1 = edge.startNodeId;
+                const nodeId2 = edge.endNodeId;
+                return nodeId1 < nodeId2 ? nodeId1 + "_" + nodeId2 : nodeId2 + "_" + nodeId1;
+        });
         for (const group of groups) {
                 const edges = group[1];
+
+                const SIZE = 5;
+
+                if (Object.keys(edges).length == 1) {
+                        const edge = edges[0];
+                        g.addEdge(edge.startNodeId, edge.endNodeId, {
+                                size: SIZE, color: edge.color, label: edge.label,
+                                type: "straight"
+                        });
+                        continue;
+                }
+
                 for (const [index, edge] of edges.entries()) {
-                        const label = edge.label;
                         const curvature = calcCurvature(index);
-                        const SIZE = 5;
-                        g.addEdge(edge.startNodeId, edge.endNodeId, { size: SIZE, color: edge.color, label: label, curvature: curvature });
+                        g.addEdge(edge.startNodeId, edge.endNodeId, {
+                                size: SIZE, color: edge.color, label: edge.label,
+                                type: "curved", curvature: curvature
+                        });
                 }
         }
 
         return (
                 <SigmaContainer graph={g} settings={{
-                        defaultEdgeType: "curvedArrow",
-                        edgeProgramClasses: { curvedArrow: EdgeCurvedArrowProgram },
+                        edgeProgramClasses: { straight: EdgeArrowProgram, curved: EdgeCurvedArrowProgram },
                         renderEdgeLabels: true
                 }} />
         );
