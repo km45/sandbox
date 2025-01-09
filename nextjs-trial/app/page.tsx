@@ -1,15 +1,14 @@
 "use client"
 
-import { Canvas, Edge, Node } from "../components/Canvas";
+import { Canvas, Edges, Nodes } from "../components/Canvas";
 import { generateGraphOnServer } from "./server";
 import { useState } from "react";
 import { Button, Navbar, Form, Input, Menu } from "react-daisyui";
 
 export default function Home() {
-  const [nodes, setNodes] = useState<Set<Node>>([]);
-  const [edges, setEdges] = useState<Set<Edge>>([]);
+  const [nodes, setNodes] = useState<Nodes>({});
+  const [edges, setEdges] = useState<Edges>({});
   const [prompts, setPrompts] = useState<string[]>([]);
-
 
   function addPrompt(formData: FormData) {
     const prompt = formData.get("prompt");
@@ -17,11 +16,13 @@ export default function Home() {
       return;
     }
 
-    setPrompts([...prompts, prompt]);
+    const nextPrompts = [...prompts, prompt];
+    setPrompts(nextPrompts);
   }
 
   function removePromt(index: number) {
-    setPrompts(prompts.filter((_, i) => i != index));
+    const nextPrompts = prompts.filter((_, i) => i != index);
+    setPrompts(nextPrompts);
   }
 
   async function calcGraph() {

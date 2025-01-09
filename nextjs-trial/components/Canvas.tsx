@@ -7,22 +7,26 @@ import "@react-sigma/core/lib/react-sigma.min.css";
 
 import { EdgeCurvedArrowProgram, DEFAULT_EDGE_CURVATURE } from '@sigma/edge-curve';
 
-export type Node = {
-        id: string;
+export type NodeValue = {
         label: string;
-        x: Number;
-        y: Number;
+        x: number;
+        y: number;
 }
 
-export type Edge = {
-        start_node_id: string;
-        end_node_id: string;
+export type Nodes = { [key: string]: NodeValue };
+
+export type EdgeValue = {
+        startNodeId: string;
+        endNodeId: string;
+        label: string;
         color: string;
-};
+}
+
+export type Edges = { [key: string]: EdgeValue };
 
 export type Props = {
-        nodes: Set<Node>;
-        edges: Set<Edge>;
+        nodes: Nodes;
+        edges: Edges;
 }
 
 function calcCurvature(index: number) {
@@ -32,19 +36,19 @@ function calcCurvature(index: number) {
 
 export function Canvas({ nodes, edges }: Props) {
         const g = new MultiGraph();
-        for (const node of nodes) {
+        for (const [key, value] of Object.entries(nodes)) {
                 const SIZE = 20;
-                g.addNode(node.id, { label: node.label, x: node.x, y: node.y, size: SIZE });
+                g.addNode(key, { label: value.label, x: value.x, y: value.y, size: SIZE });
         }
 
-        const groups = Map.groupBy(edges, (edge) => { return edge.start_node_id + "_" + edge.end_node_id });
+        const groups = Map.groupBy(Object.values(edges), (edge) => { return edge.startNodeId + "_" + edge.endNodeId });
         for (const group of groups) {
                 const edges = group[1];
                 for (const [index, edge] of edges.entries()) {
-                        const label = edge.start_node_id + " -> " + edge.end_node_id;
+                        const label = edge.label;
                         const curvature = calcCurvature(index);
                         const SIZE = 5;
-                        g.addEdge(edge.start_node_id, edge.end_node_id, { size: SIZE, color: edge.color, label: label, curvature: curvature });
+                        g.addEdge(edge.startNodeId, edge.endNodeId, { size: SIZE, color: edge.color, label: label, curvature: curvature });
                 }
         }
 
