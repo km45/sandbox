@@ -49,14 +49,19 @@ function App() {
                 prompts
               </div>
             </summary>
-            <ul className="dropdown-content menu bg-base-100">
+            <ul className="dropdown-content list bg-green-700 max-h-[80dvh] w-[90dvw] overflow-y-auto">
               {state.prompts?.map((prompt, index) => (
-                <li key={index}>
+                <li key={index} className="list-row">
                   <form action={submitAction}>
                     <input type="hidden" name="action" value="remove" />
                     <input type="hidden" name="index" value={index} />
-                    <input type="submit" value={prompt} />
+                    <button>r</button>
                   </form>
+                  <button>d</button>
+                  <div className="list-col-grow">{prompt}</div>
+                  <div className="list-col-wrap">
+                    <div>something to explain</div>
+                  </div>
                 </li>
               ))}
             </ul>
