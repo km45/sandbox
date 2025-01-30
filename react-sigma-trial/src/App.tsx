@@ -39,59 +39,36 @@ function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
 
   return (
-    <div className="h-dvh flex flex-col">
-      <div className="navbar bg-red-400">
-        <div className="">
-          <div className="dropdown dropdown-hover">
-            <summary className="btn">
-              <div className="indicator">
-                <div className="indicator-item">{state.prompts?.length}</div>
-                prompts
-              </div>
-            </summary>
-            <ul className="dropdown-content list bg-green-700 max-h-[80dvh] w-[90dvw] overflow-y-auto">
-              {state.prompts?.map((prompt, index) => (
-                <li key={index} className="list-row">
-                  <form action={submitAction}>
-                    <input type="hidden" name="action" value="remove" />
-                    <input type="hidden" name="index" value={index} />
-                    <button>r</button>
-                  </form>
-                  <button>d</button>
-                  <div className="list-col-grow">{prompt}</div>
-                  <div className="list-col-wrap">
-                    <div>something to explain</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div style={{ height: "100dvh", display: "flex", flexDirection: "column" }}>
+      <div style={{ backgroundColor: "red" }}>
+        <div>{state.prompts?.length} prompt(s)</div>
+        <div>
+          {state.prompts?.map((prompt, index) => (
+            <form key={index} action={submitAction}>
+              <input type="hidden" name="action" value="remove" />
+              <input type="hidden" name="index" value={index} />
+              <button>{prompt}</button>
+            </form>
+          ))}
         </div>
-        <div className="">
-          <form action={submitAction} className="flex">
-            <div
-              className="tooltip tooltip-bottom flex-none"
-              data-tip="short input interpretation"
-            >
-              <select defaultValue="dummy" className="select">
+        <div>
+          <form action={submitAction}>
+            <div>
+              <select title="short input interpretation">
                 <option>dummy</option>
                 <option disabled={true}>trail</option>
                 <option disabled={true}>node</option>
               </select>
             </div>
+
             <input type="hidden" name="action" value="add" />
-            <input
-              type="text"
-              className="input grow"
-              name="prompt"
-              placeholder="type a prompt here"
-            />
+            <input type="text" name="prompt" placeholder="type a prompt here" />
           </form>
         </div>
-        <div className="">sample</div>
+        <div>sample</div>
       </div>
 
-      <div className="flex-grow">
+      <div style={{ flexGrow: 1 }}>
         <SigmaContainer>
           <MyGraph nodes={state.nodes} edges={state.edges} />
           <ControlsContainer position={"bottom-right"}>
