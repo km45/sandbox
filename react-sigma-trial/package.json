@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@react-sigma/core": "^5.0.1",
+    "bulma": "^1.0.3",
     "graphology": "^0.25.4",
     "graphology-types": "^0.24.8",
     "normalize.css": "^8.0.1",

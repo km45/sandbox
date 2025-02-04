@@ -40,20 +40,31 @@ function App() {
 
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column" }}>
-      <div style={{ backgroundColor: "red" }}>
-        <div>{state.prompts?.length} prompt(s)</div>
-        <div>
-          {state.prompts?.map((prompt, index) => (
-            <form key={index} action={submitAction}>
-              <input type="hidden" name="action" value="remove" />
-              <input type="hidden" name="index" value={index} />
-              <button>{prompt}</button>
-            </form>
-          ))}
+      <div className="has-background-light">
+        <div>sample</div>
+        <div className="dropdown is-hoverable">
+          <div className="dropdown-trigger">
+            <button className="button" aria-controls="dropdown-menu">
+              <span>{state.prompts?.length ?? 0} prompt(s)</span>
+            </button>
+          </div>
+          <div className="dropdown-menu" id="dropdown-menu">
+            <div className="dropdown-content">
+              {state.prompts?.map((prompt, index) => (
+                <div className="dropdown-item">
+                  <form key={index} action={submitAction}>
+                    <input type="hidden" name="action" value="remove" />
+                    <input type="hidden" name="index" value={index} />
+                    <button>{prompt}</button>
+                  </form>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
         <div>
           <form action={submitAction}>
-            <div>
+            <div className="select is-rounded">
               <select title="short input interpretation">
                 <option>dummy</option>
                 <option disabled={true}>trail</option>
@@ -62,10 +73,14 @@ function App() {
             </div>
 
             <input type="hidden" name="action" value="add" />
-            <input type="text" name="prompt" placeholder="type a prompt here" />
+            <input
+              type="text"
+              name="prompt"
+              placeholder="type a prompt here"
+              className="input is-rounded"
+            />
           </form>
         </div>
-        <div>sample</div>
       </div>
 
       <div style={{ flexGrow: 1 }}>
