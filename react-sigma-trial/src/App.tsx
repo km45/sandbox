@@ -41,56 +41,70 @@ function App() {
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column" }}>
       <div className="has-background-light">
-        <div>sample</div>
-        <div className="dropdown is-hoverable">
-          <div className="dropdown-trigger">
-            <button className="button" aria-controls="dropdown-menu">
-              <span>{state.prompts?.length ?? 0} prompt(s)</span>
-            </button>
+        <form
+          action={submitAction}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            margin: "10px",
+            gap: "10px",
+          }}
+        >
+          <div>sample</div>
+          <div className="select is-rounded">
+            <select title="short input interpretation">
+              <option>dummy</option>
+              <option disabled={true}>trail</option>
+              <option disabled={true}>node</option>
+            </select>
           </div>
-          <div className="dropdown-menu" id="dropdown-menu">
-            <div className="dropdown-content">
-              {state.prompts?.map((prompt, index) => (
-                <div className="dropdown-item">
-                  <form key={index} action={submitAction}>
-                    <input type="hidden" name="action" value="remove" />
-                    <input type="hidden" name="index" value={index} />
-                    <button>{prompt}</button>
-                  </form>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div>
-          <form action={submitAction}>
-            <div className="select is-rounded">
-              <select title="short input interpretation">
-                <option>dummy</option>
-                <option disabled={true}>trail</option>
-                <option disabled={true}>node</option>
-              </select>
-            </div>
 
-            <input type="hidden" name="action" value="add" />
-            <input
-              type="text"
-              name="prompt"
-              placeholder="type a prompt here"
-              className="input is-rounded"
-            />
-          </form>
-        </div>
+          <input type="hidden" name="action" value="add" />
+          <input
+            type="text"
+            name="prompt"
+            placeholder="type a prompt here"
+            className="input is-rounded"
+          />
+        </form>
       </div>
-
       <div style={{ flexGrow: 1 }}>
-        <SigmaContainer>
-          <MyGraph nodes={state.nodes} edges={state.edges} />
-          <ControlsContainer position={"bottom-right"}>
-            <ZoomControl />
-            <FullScreenControl />
-          </ControlsContainer>
-        </SigmaContainer>
+        <div style={{ display: "flex", height: "100%" }}>
+          <div
+            className="has-background-light"
+            style={{ resize: "horizontal", width: "20%", overflowX: "hidden" }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+              }}
+            >
+              <div>{state.prompts?.length ?? 0} prompt(s)</div>
+              <div style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}>
+                {state.prompts?.map((prompt, index) => (
+                  <div key={index}>
+                    <form action={submitAction}>
+                      <input type="hidden" name="action" value="remove" />
+                      <input type="hidden" name="index" value={index} />
+                      <button>{prompt}</button>
+                    </form>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div style={{ flexGrow: 1 }}>
+            <SigmaContainer>
+              <MyGraph nodes={state.nodes} edges={state.edges} />
+              <ControlsContainer position={"bottom-right"}>
+                <ZoomControl />
+                <FullScreenControl />
+              </ControlsContainer>
+            </SigmaContainer>
+          </div>
+        </div>
       </div>
     </div>
   );
