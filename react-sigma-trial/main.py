@@ -12,9 +12,7 @@ def root():
     return {"Hello": "World"}
 
 
-@dataclass(frozen=True)
-class NodeId:
-    value: int
+NodeId = str
 
 
 @dataclass(frozen=True)
@@ -30,40 +28,35 @@ class Edge:
     target: NodeId
 
 
-@dataclass(frozen=True)
-class Trail:
-    edges: list[Edge]
-    nodes: list[Node]
+def node(id: NodeId) -> Node | None:
+    nodes = (
+        Node("1", 1, 1),
+        Node("2", 2, 0),
+        Node("3", 3, 0),
+        Node("4", 4, 1),
+        Node("101", 1, -1),
+        Node("104", 4, -1),
+    )
+
+    for node in nodes:
+        if node.id == id:
+            return node
+
+    return None
 
 
-def trail(id: str) -> Trail | None:
+def trail(id: str) -> tuple[Edge, ...] | None:
     if id == "1":
-        return Trail(
-            edges=[
-                Edge(NodeId(value=1), NodeId(value=2)),
-                Edge(NodeId(value=2), NodeId(value=3)),
-                Edge(NodeId(value=3), NodeId(value=4)),
-            ],
-            nodes=[
-                Node(NodeId(value=1), 1, 1),
-                Node(NodeId(value=2), 2, 0),
-                Node(NodeId(value=3), 3, 0),
-                Node(NodeId(value=4), 4, 1),
-            ],
+        return (
+            Edge("1", "2"),
+            Edge("2", "3"),
+            Edge("3", "4"),
         )
     elif id == "2":
-        return Trail(
-            edges=[
-                Edge(NodeId(value=101), NodeId(value=2)),
-                Edge(NodeId(value=2), NodeId(value=3)),
-                Edge(NodeId(value=3), NodeId(value=104)),
-            ],
-            nodes=[
-                Node(NodeId(value=101), 1, -1),
-                Node(NodeId(value=2), 2, 0),
-                Node(NodeId(value=3), 3, 0),
-                Node(NodeId(value=104), 4, -1),
-            ],
+        return (
+            Edge("101", "2"),
+            Edge("2", "3"),
+            Edge("3", "104"),
         )
     else:
         return None
@@ -95,10 +88,20 @@ def graph(request: GraphRequest) -> GraphResponce:
             v = trail(id)
             if v is None:
                 errors.append(f"trail {id} not found")
-            else:
-                for edge in v.edges:
-                    edges.add(edge)
-                for node in v.nodes:
-                    nodes.add(node)
+                continue
+            for edge in v:
+                edges.add(edge)
+
+    print(edges)
+
+    for edge in edges:
+        v = node(edge.source)
+        if v is not None:
+            nodes.add(v)
+        v = node(edge.target)
+        if v is not None:
+            nodes.add(v)
+
+    print(nodes)
 
     return GraphResponce(edges=list(edges), nodes=list(nodes), errors=errors)

@@ -83,10 +83,10 @@ async function updatePrompts(
         console.error(error);
       }
       for (let node of json.nodes) {
-        nodes.push({ id: node.id.value, x: node.x, y: node.y });
+        nodes.push({ id: node.id, x: node.x, y: node.y });
       }
       for (let edge of json.edges) {
-        edges.push({ source: edge.source.value, target: edge.target.value });
+        edges.push({ source: edge.source, target: edge.target });
       }
     }
 
