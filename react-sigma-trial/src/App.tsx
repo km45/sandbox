@@ -96,7 +96,7 @@ function App() {
             </div>
           </div>
           <div style={{ flexGrow: 1 }}>
-            <SigmaContainer>
+            <SigmaContainer graph={MultiDirectedGraph}>
               <MyGraph nodes={state.nodes} edges={state.edges} />
               <ControlsContainer position={"bottom-right"}>
                 <ZoomControl />

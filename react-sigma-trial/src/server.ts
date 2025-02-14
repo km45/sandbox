@@ -53,22 +53,35 @@ export async function updatePrompts(
     const prompts = newPrompts(prevState.prompts, queryData);
 
     const nodes: Node[] = [];
-    if (prompts && prompts.length > 0) {
-      const count = parseInt(prompts[0]);
-      for (let x = 0; x < count * 10; x++) {
-        for (let y = 0; y < 100; y++) {
-          nodes.push({ id: x + "_" + y, x: x, y: y });
-        }
+    const edges: Edge[] = [];
+
+
+    if (prompts) {
+      const res = await fetch("/api/graph", {
+        method: "POST", headers: {
+          'Content-Type': 'application/json'
+        }, body: JSON.stringify({ prompts: prompts })
+      }).then();
+      if (!res.ok) {
+        console.error("error occured!");
+      }
+
+      const json = await res.json();
+      for (let error of json.errors) {
+        console.error(error);
+      }
+      for (let node of json.nodes) {
+        nodes.push({ id: node.id.value, x: node.x, y: node.y });
+      }
+      for (let edge of json.edges) {
+        edges.push({ source: edge.source.value, target: edge.target.value });
       }
     }
 
-    const edges: Edge[] = [];
-    if (nodes.length > 0) {
-      edges.push({ source: "0_0", target: "1_2" });
-      edges.push({ source: "1_2", target: "1_0" });
-    }
-
-    return { prompts: prompts, nodes: nodes, edges: edges };
+    const ret = { prompts: prompts, nodes: nodes, edges: edges };
+    console.log("== ret ==");
+    console.debug(ret);
+    return ret;
   } catch (e) {
     console.error(e);
     return prevState;
