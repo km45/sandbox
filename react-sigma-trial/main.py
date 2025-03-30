@@ -29,12 +29,19 @@ class Edge:
 
 
 def node(id: NodeId) -> Node | None:
+    #      1  2  3  4
+    #   +------------
+    #  1|__1      __4
+    #  0|   __2__3
+    # -1|101102103104
     nodes = (
         Node("1", 1, 1),
         Node("2", 2, 0),
         Node("3", 3, 0),
         Node("4", 4, 1),
         Node("101", 1, -1),
+        Node("102", 2, -1),
+        Node("103", 3, -1),
         Node("104", 4, -1),
     )
 
@@ -57,6 +64,12 @@ def trail(id: str) -> tuple[Edge, ...] | None:
             Edge("101", "2"),
             Edge("2", "3"),
             Edge("3", "104"),
+        )
+    elif id == "3":
+        return (
+            Edge("103", "3"),
+            Edge("3", "2"),
+            Edge("2", "102"),
         )
     else:
         return None

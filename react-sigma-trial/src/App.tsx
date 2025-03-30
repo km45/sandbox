@@ -115,7 +115,7 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
 
   if (props.edges) {
     for (const edge of props.edges) {
-      graph.addEdge(edge.source, edge.target);
+      graph.addEdge(edge.source, edge.target, { "type": "arrow" });
     }
   }
 
@@ -185,7 +185,7 @@ function App() {
             </div>
           </div>
           <div style={{ flexGrow: 1 }}>
-            <SigmaContainer graph={MultiDirectedGraph}>
+            <SigmaContainer graph={MultiDirectedGraph} settings={{ edgeProgramClasses: { arrow: EdgeArrowProgram } }}>
               <MyGraph nodes={state.nodes} edges={state.edges} />
               <ControlsContainer position={"bottom-right"}>
                 <ZoomControl />
