@@ -26,6 +26,7 @@ class Node:
 class Edge:
     source: NodeId
     target: NodeId
+    label: str
 
 
 def node(id: NodeId) -> Node | None:
@@ -55,21 +56,21 @@ def node(id: NodeId) -> Node | None:
 def trail(id: str) -> tuple[Edge, ...] | None:
     if id == "1":
         return (
-            Edge("1", "2"),
-            Edge("2", "3"),
-            Edge("3", "4"),
+            Edge("1", "2", id),
+            Edge("2", "3", id),
+            Edge("3", "4", id),
         )
     elif id == "2":
         return (
-            Edge("101", "2"),
-            Edge("2", "3"),
-            Edge("3", "104"),
+            Edge("101", "2", id),
+            Edge("2", "3", id),
+            Edge("3", "104", id),
         )
     elif id == "3":
         return (
-            Edge("103", "3"),
-            Edge("3", "2"),
-            Edge("2", "102"),
+            Edge("103", "3", id),
+            Edge("3", "2", id),
+            Edge("2", "102", id),
         )
     else:
         return None

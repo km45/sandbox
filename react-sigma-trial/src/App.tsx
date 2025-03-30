@@ -22,6 +22,7 @@ export type Node = {
 export type Edge = {
   source: NodeId;
   target: NodeId;
+  label: string;
 };
 
 export type State = {
@@ -86,7 +87,7 @@ async function updatePrompts(
         nodes.push({ id: node.id, x: node.x, y: node.y });
       }
       for (let edge of json.edges) {
-        edges.push({ source: edge.source, target: edge.target });
+        edges.push({ source: edge.source, target: edge.target, label: edge.label });
       }
     }
 
@@ -115,7 +116,7 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
 
   if (props.edges) {
     for (const edge of props.edges) {
-      graph.addEdge(edge.source, edge.target, { "type": "arrow" });
+      graph.addEdge(edge.source, edge.target, { label: edge.label, type: "arrow", forceLabel: true });
     }
   }
 
@@ -185,7 +186,7 @@ function App() {
             </div>
           </div>
           <div style={{ flexGrow: 1 }}>
-            <SigmaContainer graph={MultiDirectedGraph} settings={{ edgeProgramClasses: { arrow: EdgeArrowProgram } }}>
+            <SigmaContainer graph={MultiDirectedGraph} settings={{ edgeProgramClasses: { arrow: EdgeArrowProgram }, renderEdgeLabels: true }}>
               <MyGraph nodes={state.nodes} edges={state.edges} />
               <ControlsContainer position={"bottom-right"}>
                 <ZoomControl />
