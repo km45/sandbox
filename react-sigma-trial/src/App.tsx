@@ -142,7 +142,7 @@ function App() {
           <div>sample</div>
           <div className="select is-rounded">
             <select title="short input interpretation">
-              <option>dummy</option>
+              <option>disabled</option>
               <option disabled={true}>trail</option>
               <option disabled={true}>node</option>
             </select>
