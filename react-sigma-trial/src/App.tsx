@@ -107,6 +107,10 @@ async function updatePrompts(
   }
 }
 
+const EDGE_SIZE_DEFAULT = 6;
+const EDGE_SIZE_HIGHLIGHTED = 12;
+
+
 function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   const loadGraph = useLoadGraph();
 
@@ -116,7 +120,7 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
 
   if (props.nodes) {
     for (const node of props.nodes) {
-      graph.addNode(node.id, { x: node.x, y: node.y, label: node.id, size: 6 });
+      graph.addNode(node.id, { x: node.x, y: node.y, label: node.id, size: EDGE_SIZE_DEFAULT });
     }
   }
 
@@ -143,6 +147,15 @@ function GraphEvents() {
 
   useEffect(() => {
     registerEvents({
+      downEdge: (e) => {
+        if (e.event.original.ctrlKey) {
+          if (sigma.getGraph().getEdgeAttribute(e.edge, 'size') == EDGE_SIZE_DEFAULT) {
+            sigma.getGraph().setEdgeAttribute(e.edge, 'size', EDGE_SIZE_HIGHLIGHTED);
+          } else {
+            sigma.getGraph().setEdgeAttribute(e.edge, 'size', EDGE_SIZE_DEFAULT);
+          }
+        }
+      },
       downNode: (e) => {
         if (e.event.original.ctrlKey) {
           // with CTRL: change the highlight of the node
