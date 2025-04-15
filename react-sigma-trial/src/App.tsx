@@ -144,7 +144,16 @@ function GraphEvents() {
   useEffect(() => {
     registerEvents({
       downNode: (e) => {
-        setDraggedNode(e.node);
+        if (e.event.original.ctrlKey) {
+          // with CTRL: change the highlight of the node
+          if (sigma.getGraph().hasNodeAttribute(e.node, 'highlighted')) {
+            sigma.getGraph().removeNodeAttribute(e.node, 'highlighted');
+          } else {
+            sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true);
+          }
+        } else {
+          setDraggedNode(e.node);
+        }
       },
       mousemovebody: (e) => {
         if (!draggedNode) {
