@@ -1,4 +1,4 @@
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import "./App.css";
 import {
   SigmaContainer,
@@ -6,6 +6,8 @@ import {
   ControlsContainer,
   ZoomControl,
   FullScreenControl,
+  useRegisterEvents,
+  useSigma,
 } from "@react-sigma/core";
 import "@react-sigma/core/lib/style.css";
 import { MultiDirectedGraph } from "graphology";
@@ -125,6 +127,47 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   return <></>;
 }
 
+function GraphEvents() {
+  const registerEvents = useRegisterEvents();
+  const sigma = useSigma();
+  const [draggedNode, setDraggedNode] = useState<string | null>(null);
+
+  useEffect(() => {
+    registerEvents({
+      downNode: (e) => {
+        setDraggedNode(e.node);
+      },
+      mousemovebody: (e) => {
+        if (!draggedNode) {
+          return;
+        }
+
+        const pos = sigma.viewportToGraph(e);
+        sigma.getGraph().setNodeAttribute(draggedNode, 'x', pos.x);
+        sigma.getGraph().setNodeAttribute(draggedNode, 'y', pos.y);
+
+        // prevent sigma to move camera:
+        e.preventSigmaDefault();
+        // e.original.preventDefault();
+        // e.original.stopPropagation();
+      },
+      mouseup: () => {
+        if (draggedNode) {
+          setDraggedNode(null);
+        }
+      },
+      mousedown: () => {
+        if (!sigma.getCustomBBox()) {
+          // disable the autoscale at the first down interaction
+          sigma.setCustomBBox(sigma.getBBox());
+        }
+      },
+    });
+  }, [registerEvents, sigma, draggedNode]);
+
+  return null;
+}
+
 function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
 
@@ -186,8 +229,9 @@ function App() {
             </div>
           </div>
           <div style={{ flexGrow: 1 }}>
-            <SigmaContainer graph={MultiDirectedGraph} settings={{ edgeProgramClasses: { arrow: EdgeArrowProgram }, renderEdgeLabels: true }}>
+            <SigmaContainer graph={MultiDirectedGraph} settings={{ edgeProgramClasses: { arrow: EdgeArrowProgram }, renderEdgeLabels: true, enableEdgeEvents: true }}>
               <MyGraph nodes={state.nodes} edges={state.edges} />
+              <GraphEvents />
               <ControlsContainer position={"bottom-right"}>
                 <ZoomControl />
                 <FullScreenControl />
