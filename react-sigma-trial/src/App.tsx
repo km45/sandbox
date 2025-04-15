@@ -38,20 +38,22 @@ function newPrompts(prevPrompts: string[] | undefined, queryData: FormData) {
 
   switch (action) {
     case "add":
-      const p = queryData.get("prompt");
-      if (typeof p !== "string") {
-        throw new Error("Invalid prompt: " + p);
+      {
+        const p = queryData.get("prompt");
+        if (typeof p !== "string") {
+          throw new Error("Invalid prompt: " + p);
+        }
+        return (prevPrompts ?? []).concat([p]);
       }
-      return (prevPrompts ?? []).concat([p]);
-
     case "remove":
-      const stringifiedIndex = queryData.get("index");
-      if (typeof stringifiedIndex !== "string") {
-        throw new Error("Invalid index: " + stringifiedIndex);
+      {
+        const stringifiedIndex = queryData.get("index");
+        if (typeof stringifiedIndex !== "string") {
+          throw new Error("Invalid index: " + stringifiedIndex);
+        }
+        const index = parseInt(stringifiedIndex);
+        return prevPrompts?.filter((_, i) => i != index);
       }
-      const index = parseInt(stringifiedIndex);
-      return prevPrompts?.filter((_, i) => i != index);
-
     default:
       throw new Error("Invalid action: " + action);
   }
@@ -82,13 +84,13 @@ async function updatePrompts(
       }
 
       const json = await res.json();
-      for (let error of json.errors) {
+      for (const error of json.errors) {
         console.error(error);
       }
-      for (let node of json.nodes) {
+      for (const node of json.nodes) {
         nodes.push({ id: node.id, x: node.x, y: node.y });
       }
-      for (let edge of json.edges) {
+      for (const edge of json.edges) {
         edges.push({ source: edge.source, target: edge.target, label: edge.label });
       }
     }
