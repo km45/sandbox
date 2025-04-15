@@ -37,23 +37,21 @@ function newPrompts(prevPrompts: string[] | undefined, queryData: FormData) {
   const action = queryData.get("action");
 
   switch (action) {
-    case "add":
-      {
-        const p = queryData.get("prompt");
-        if (typeof p !== "string") {
-          throw new Error("Invalid prompt: " + p);
-        }
-        return (prevPrompts ?? []).concat([p]);
+    case "add": {
+      const p = queryData.get("prompt");
+      if (typeof p !== "string") {
+        throw new Error("Invalid prompt: " + p);
       }
-    case "remove":
-      {
-        const stringifiedIndex = queryData.get("index");
-        if (typeof stringifiedIndex !== "string") {
-          throw new Error("Invalid index: " + stringifiedIndex);
-        }
-        const index = parseInt(stringifiedIndex);
-        return prevPrompts?.filter((_, i) => i != index);
+      return (prevPrompts ?? []).concat([p]);
+    }
+    case "remove": {
+      const stringifiedIndex = queryData.get("index");
+      if (typeof stringifiedIndex !== "string") {
+        throw new Error("Invalid index: " + stringifiedIndex);
       }
+      const index = parseInt(stringifiedIndex);
+      return prevPrompts?.filter((_, i) => i != index);
+    }
     default:
       throw new Error("Invalid action: " + action);
   }
@@ -91,7 +89,11 @@ async function updatePrompts(
         nodes.push({ id: node.id, x: node.x, y: node.y });
       }
       for (const edge of json.edges) {
-        edges.push({ source: edge.source, target: edge.target, label: edge.label });
+        edges.push({
+          source: edge.source,
+          target: edge.target,
+          label: edge.label,
+        });
       }
     }
 
@@ -120,7 +122,12 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
 
   if (props.edges) {
     for (const edge of props.edges) {
-      graph.addEdge(edge.source, edge.target, { label: edge.label, type: "arrow", forceLabel: true, size: 6 });
+      graph.addEdge(edge.source, edge.target, {
+        label: edge.label,
+        type: "arrow",
+        forceLabel: true,
+        size: 6,
+      });
     }
   }
 
@@ -145,8 +152,8 @@ function GraphEvents() {
         }
 
         const pos = sigma.viewportToGraph(e);
-        sigma.getGraph().setNodeAttribute(draggedNode, 'x', pos.x);
-        sigma.getGraph().setNodeAttribute(draggedNode, 'y', pos.y);
+        sigma.getGraph().setNodeAttribute(draggedNode, "x", pos.x);
+        sigma.getGraph().setNodeAttribute(draggedNode, "y", pos.y);
 
         // prevent sigma to move camera:
         e.preventSigmaDefault();
@@ -231,7 +238,14 @@ function App() {
             </div>
           </div>
           <div style={{ flexGrow: 1 }}>
-            <SigmaContainer graph={MultiDirectedGraph} settings={{ edgeProgramClasses: { arrow: EdgeArrowProgram }, renderEdgeLabels: true, enableEdgeEvents: true }}>
+            <SigmaContainer
+              graph={MultiDirectedGraph}
+              settings={{
+                edgeProgramClasses: { arrow: EdgeArrowProgram },
+                renderEdgeLabels: true,
+                enableEdgeEvents: true,
+              }}
+            >
               <MyGraph nodes={state.nodes} edges={state.edges} />
               <GraphEvents />
               <ControlsContainer position={"bottom-right"}>
