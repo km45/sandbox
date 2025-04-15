@@ -110,13 +110,13 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
 
   if (props.nodes) {
     for (const node of props.nodes) {
-      graph.addNode(node.id, { x: node.x, y: node.y, label: node.id });
+      graph.addNode(node.id, { x: node.x, y: node.y, label: node.id, size: 6 });
     }
   }
 
   if (props.edges) {
     for (const edge of props.edges) {
-      graph.addEdge(edge.source, edge.target, { label: edge.label, type: "arrow", forceLabel: true });
+      graph.addEdge(edge.source, edge.target, { label: edge.label, type: "arrow", forceLabel: true, size: 6 });
     }
   }
 
