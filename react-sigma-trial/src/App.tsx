@@ -16,6 +16,12 @@ import { EdgeArrowProgram } from "sigma/rendering";
 import createClient from "openapi-fetch";
 import type { paths } from "./api-schema";
 
+import {
+  EdgeCurvedArrowProgram,
+  DEFAULT_EDGE_CURVATURE,
+  indexParallelEdgesIndex,
+} from "@sigma/edge-curve";
+
 const client = createClient<paths>({ baseUrl: "/api" });
 
 type NodeId = string;
@@ -135,6 +141,19 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
       });
     }
   }
+
+  indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex" });
+
+  graph.forEachEdge((edge, { parallelIndex }) => {
+    if (typeof parallelIndex === "number") {
+      graph.mergeEdgeAttributes(edge, {
+        type: "curvedArrow",
+        curvature: DEFAULT_EDGE_CURVATURE * parallelIndex,
+      });
+    } else {
+      graph.setEdgeAttribute(edge, "type", "arrow");
+    }
+  });
 
   loadGraph(graph);
 
@@ -271,7 +290,10 @@ function App() {
             <SigmaContainer
               graph={MultiDirectedGraph}
               settings={{
-                edgeProgramClasses: { arrow: EdgeArrowProgram },
+                edgeProgramClasses: {
+                  arrow: EdgeArrowProgram,
+                  curvedArrow: EdgeCurvedArrowProgram,
+                },
                 renderEdgeLabels: true,
                 enableEdgeEvents: true,
               }}
