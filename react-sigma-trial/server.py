@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from dataclasses import dataclass
 import re
 
-# Run server with command: fastapi dev main.py
+# Run server with command: fastapi dev server.py
 app = FastAPI()
 
 
