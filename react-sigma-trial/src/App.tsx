@@ -68,42 +68,40 @@ async function updatePrompts(
 ): Promise<State> {
   console.debug(prevState, queryData);
 
-  {
-    const prompts = newPrompts(prevState.prompts, queryData);
+  const prompts = newPrompts(prevState.prompts, queryData);
 
-    const nodes: Node[] = [];
-    const edges: Edge[] = [];
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
 
-    if (prompts) {
-      const { data, error } = await client.POST("/graph", {
-        body: { prompts: prompts },
-      });
+  if (prompts) {
+    const { data, error } = await client.POST("/graph", {
+      body: { prompts: prompts },
+    });
 
-      if (!data) {
-        console.error(error);
-        return prevState;
-      }
-
-      for (const error of data.errors) {
-        console.error(error);
-      }
-      for (const node of data.nodes) {
-        nodes.push({ id: node.id, x: node.x, y: node.y });
-      }
-      for (const edge of data.edges) {
-        edges.push({
-          source: edge.source,
-          target: edge.target,
-          label: edge.label,
-        });
-      }
+    if (!data) {
+      console.error(error);
+      return prevState;
     }
 
-    const ret = { prompts: prompts, nodes: nodes, edges: edges };
-    console.log("== ret ==");
-    console.debug(ret);
-    return ret;
+    for (const error of data.errors) {
+      console.error(error);
+    }
+    for (const node of data.nodes) {
+      nodes.push({ id: node.id, x: node.x, y: node.y });
+    }
+    for (const edge of data.edges) {
+      edges.push({
+        source: edge.source,
+        target: edge.target,
+        label: edge.label,
+      });
+    }
   }
+
+  const ret = { prompts: prompts, nodes: nodes, edges: edges };
+  console.log("== ret ==");
+  console.debug(ret);
+  return ret;
 }
 
 const EDGE_SIZE_DEFAULT = 6;
@@ -118,7 +116,12 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
 
   if (props.nodes) {
     for (const node of props.nodes) {
-      graph.addNode(node.id, { x: node.x, y: node.y, label: node.id, size: EDGE_SIZE_DEFAULT });
+      graph.addNode(node.id, {
+        x: node.x,
+        y: node.y,
+        label: node.id,
+        size: EDGE_SIZE_DEFAULT,
+      });
     }
   }
 
@@ -147,20 +150,27 @@ function GraphEvents() {
     registerEvents({
       downEdge: (e) => {
         if (e.event.original.ctrlKey) {
-          if (sigma.getGraph().getEdgeAttribute(e.edge, 'size') == EDGE_SIZE_DEFAULT) {
-            sigma.getGraph().setEdgeAttribute(e.edge, 'size', EDGE_SIZE_HIGHLIGHTED);
+          if (
+            sigma.getGraph().getEdgeAttribute(e.edge, "size") ==
+            EDGE_SIZE_DEFAULT
+          ) {
+            sigma
+              .getGraph()
+              .setEdgeAttribute(e.edge, "size", EDGE_SIZE_HIGHLIGHTED);
           } else {
-            sigma.getGraph().setEdgeAttribute(e.edge, 'size', EDGE_SIZE_DEFAULT);
+            sigma
+              .getGraph()
+              .setEdgeAttribute(e.edge, "size", EDGE_SIZE_DEFAULT);
           }
         }
       },
       downNode: (e) => {
         if (e.event.original.ctrlKey) {
           // with CTRL: change the highlight of the node
-          if (sigma.getGraph().hasNodeAttribute(e.node, 'highlighted')) {
-            sigma.getGraph().removeNodeAttribute(e.node, 'highlighted');
+          if (sigma.getGraph().hasNodeAttribute(e.node, "highlighted")) {
+            sigma.getGraph().removeNodeAttribute(e.node, "highlighted");
           } else {
-            sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true);
+            sigma.getGraph().setNodeAttribute(e.node, "highlighted", true);
           }
         } else {
           setDraggedNode(e.node);
