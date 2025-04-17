@@ -13,6 +13,11 @@ import "@react-sigma/core/lib/style.css";
 import { MultiDirectedGraph } from "graphology";
 import { EdgeArrowProgram } from "sigma/rendering";
 
+import createClient from "openapi-fetch";
+import type { paths } from "./api-schema";
+
+const client = createClient<paths>({ baseUrl: "/api" });
+
 type NodeId = string;
 
 export type Node = {
@@ -63,32 +68,29 @@ async function updatePrompts(
 ): Promise<State> {
   console.debug(prevState, queryData);
 
-  try {
+  {
     const prompts = newPrompts(prevState.prompts, queryData);
 
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
     if (prompts) {
-      const res = await fetch("/api/graph", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompts: prompts }),
-      }).then();
-      if (!res.ok) {
-        console.error("error occured!");
+      const { data, error } = await client.POST("/graph", {
+        body: { prompts: prompts },
+      });
+
+      if (!data) {
+        console.error(error);
+        return prevState;
       }
 
-      const json = await res.json();
-      for (const error of json.errors) {
+      for (const error of data.errors) {
         console.error(error);
       }
-      for (const node of json.nodes) {
+      for (const node of data.nodes) {
         nodes.push({ id: node.id, x: node.x, y: node.y });
       }
-      for (const edge of json.edges) {
+      for (const edge of data.edges) {
         edges.push({
           source: edge.source,
           target: edge.target,
@@ -101,15 +103,11 @@ async function updatePrompts(
     console.log("== ret ==");
     console.debug(ret);
     return ret;
-  } catch (e) {
-    console.error(e);
-    return prevState;
   }
 }
 
 const EDGE_SIZE_DEFAULT = 6;
 const EDGE_SIZE_HIGHLIGHTED = 12;
-
 
 function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   const loadGraph = useLoadGraph();
