@@ -2,6 +2,7 @@ import { useActionState, useEffect, useState } from "react";
 import "./App.css";
 import {
   SigmaContainer,
+  SigmaContainerProps,
   useLoadGraph,
   ControlsContainer,
   ZoomControl,
@@ -171,17 +172,10 @@ function GraphEvents() {
     registerEvents({
       downEdge: (e) => {
         if (e.event.original.ctrlKey) {
-          if (
-            sigma.getGraph().getEdgeAttribute(e.edge, "size") ==
-            EDGE_SIZE_DEFAULT
-          ) {
-            sigma
-              .getGraph()
-              .setEdgeAttribute(e.edge, "size", EDGE_SIZE_HIGHLIGHTED);
+          if (sigma.getGraph().getEdgeAttribute(e.edge, "selected")) {
+            sigma.getGraph().removeEdgeAttribute(e.edge, "selected");
           } else {
-            sigma
-              .getGraph()
-              .setEdgeAttribute(e.edge, "size", EDGE_SIZE_DEFAULT);
+            sigma.getGraph().setEdgeAttribute(e.edge, "selected", true);
           }
         }
       },
@@ -227,6 +221,14 @@ function GraphEvents() {
 
   return null;
 }
+
+type EdgeReducerType = NonNullable<
+  Parameters<typeof SigmaContainer>[0]["settings"]
+>["edgeReducer"];
+const EdgeReducer: EdgeReducerType = (_edge, data) => {
+  const size = "selected" in data ? EDGE_SIZE_HIGHLIGHTED : EDGE_SIZE_DEFAULT;
+  return { ...data, size: size };
+};
 
 function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
@@ -298,6 +300,7 @@ function App() {
                 },
                 renderEdgeLabels: true,
                 enableEdgeEvents: true,
+                edgeReducer: EdgeReducer,
               }}
             >
               <MyGraph nodes={state.nodes} edges={state.edges} />
