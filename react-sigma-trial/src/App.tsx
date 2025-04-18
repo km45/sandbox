@@ -22,6 +22,8 @@ import {
   indexParallelEdgesIndex,
 } from "@sigma/edge-curve";
 
+import { LayoutForceControl } from "@react-sigma/layout-force";
+
 const client = createClient<paths>({ baseUrl: "/api" });
 
 type NodeId = string;
@@ -303,6 +305,7 @@ function App() {
               <ControlsContainer position={"bottom-right"}>
                 <ZoomControl />
                 <FullScreenControl />
+                <LayoutForceControl />
               </ControlsContainer>
             </SigmaContainer>
           </div>
