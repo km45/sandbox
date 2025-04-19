@@ -55,7 +55,7 @@ function newPrompts(prevPrompts: string[] | undefined, queryData: FormData) {
       if (typeof p !== "string") {
         throw new Error("Invalid prompt: " + p);
       }
-      return (prevPrompts ?? []).concat([p]);
+      return [p].concat((prevPrompts ?? []));
     }
     case "remove": {
       const stringifiedIndex = queryData.get("index");
@@ -285,7 +285,13 @@ function App() {
                     <form action={submitAction}>
                       <input type="hidden" name="action" value="remove" />
                       <input type="hidden" name="index" value={index} />
-                      <button>{prompt}</button>
+                      <article className="message">
+                        <div className="message-header">
+                          {prompt}
+                          <button className="delete" />
+                        </div>
+                        <div className="message-body">dummy</div>
+                      </article>
                     </form>
                   </div>
                 ))}
