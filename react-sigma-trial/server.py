@@ -102,87 +102,88 @@ def node(id: NodeId) -> Node | None:
 
 
 def trail(id: str) -> tuple[Edge, ...] | None:
-    if id == "1":
-        return (
-            Edge("1", "2", id),
-            Edge("2", "3", id),
-            Edge("3", "4", id),
-        )
-    elif id == "2":
-        return (
-            Edge("101", "2", id),
-            Edge("2", "3", id),
-            Edge("3", "104", id),
-        )
-    elif id == "3":
-        return (
-            Edge("103", "3", id),
-            Edge("3", "2", id),
-            Edge("2", "102", id),
-        )
-    elif id == "4":
-        return (
-            Edge("104", "210", id),
-            Edge("210", "211", id),
-            Edge("211", "212", id),
-            Edge("212", "213", id),
-            Edge("213", "214", id),
-            Edge("214", "215", id),
-            Edge("215", "216", id),
-            Edge("216", "217", id),
-            Edge("217", "218", id),
-            Edge("218", "219", id),
-            Edge("219", "220", id),
-            Edge("220", "221", id),
-            Edge("221", "222", id),
-            Edge("222", "223", id),
-            Edge("223", "224", id),
-            Edge("224", "225", id),
-            Edge("225", "226", id),
-            Edge("226", "227", id),
-            Edge("227", "228", id),
-            Edge("228", "229", id),
-            Edge("229", "230", id),
-        )
-    elif id == "5":
-        return (
-            Edge("4", "310", id),
-            Edge("310", "311", id),
-            Edge("311", "312", id),
-            Edge("312", "313", id),
-            Edge("313", "314", id),
-            Edge("314", "315", id),
-            Edge("315", "316", id),
-            Edge("316", "317", id),
-            Edge("317", "318", id),
-            Edge("318", "319", id),
-            Edge("319", "320", id),
-            Edge("320", "321", id),
-            Edge("321", "322", id),
-            Edge("322", "323", id),
-            Edge("323", "324", id),
-            Edge("324", "325", id),
-            Edge("325", "326", id),
-            Edge("326", "327", id),
-            Edge("327", "328", id),
-            Edge("328", "329", id),
-            Edge("329", "330", id),
-        )
-    elif id == "6":
-        return (
-            Edge("1", "410", id),
-            Edge("410", "420", id),
-            Edge("420", "430", id),
-        )
-    elif id == "7":
-        return (
-            Edge("220", "221", id),
-            Edge("221", "325", id),
-            Edge("325", "324", id),
-            Edge("324", "420", id),
-        )
-    else:
-        return None
+    match id:
+        case "1":
+            return (
+                Edge("1", "2", id),
+                Edge("2", "3", id),
+                Edge("3", "4", id),
+            )
+        case "2":
+            return (
+                Edge("101", "2", id),
+                Edge("2", "3", id),
+                Edge("3", "104", id),
+            )
+        case "3":
+            return (
+                Edge("103", "3", id),
+                Edge("3", "2", id),
+                Edge("2", "102", id),
+            )
+        case "4":
+            return (
+                Edge("104", "210", id),
+                Edge("210", "211", id),
+                Edge("211", "212", id),
+                Edge("212", "213", id),
+                Edge("213", "214", id),
+                Edge("214", "215", id),
+                Edge("215", "216", id),
+                Edge("216", "217", id),
+                Edge("217", "218", id),
+                Edge("218", "219", id),
+                Edge("219", "220", id),
+                Edge("220", "221", id),
+                Edge("221", "222", id),
+                Edge("222", "223", id),
+                Edge("223", "224", id),
+                Edge("224", "225", id),
+                Edge("225", "226", id),
+                Edge("226", "227", id),
+                Edge("227", "228", id),
+                Edge("228", "229", id),
+                Edge("229", "230", id),
+            )
+        case "5":
+            return (
+                Edge("4", "310", id),
+                Edge("310", "311", id),
+                Edge("311", "312", id),
+                Edge("312", "313", id),
+                Edge("313", "314", id),
+                Edge("314", "315", id),
+                Edge("315", "316", id),
+                Edge("316", "317", id),
+                Edge("317", "318", id),
+                Edge("318", "319", id),
+                Edge("319", "320", id),
+                Edge("320", "321", id),
+                Edge("321", "322", id),
+                Edge("322", "323", id),
+                Edge("323", "324", id),
+                Edge("324", "325", id),
+                Edge("325", "326", id),
+                Edge("326", "327", id),
+                Edge("327", "328", id),
+                Edge("328", "329", id),
+                Edge("329", "330", id),
+            )
+        case "6":
+            return (
+                Edge("1", "410", id),
+                Edge("410", "420", id),
+                Edge("420", "430", id),
+            )
+        case "7":
+            return (
+                Edge("220", "221", id),
+                Edge("221", "325", id),
+                Edge("325", "324", id),
+                Edge("324", "420", id),
+            )
+        case _:
+            return None
 
 
 class GraphRequest(BaseModel):
