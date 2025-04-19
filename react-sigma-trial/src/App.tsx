@@ -310,6 +310,7 @@ function App() {
                 renderEdgeLabels: true,
                 enableEdgeEvents: true,
                 edgeReducer: EdgeReducer,
+                allowInvalidContainer: true,
               }}
             >
               <MyGraph nodes={state.nodes} edges={state.edges} />
