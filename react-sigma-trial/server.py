@@ -233,9 +233,6 @@ class GraphResponce(BaseModel):
 
 @app.post("/graph")
 def graph(request: GraphRequest) -> GraphResponce:
-    print("app.post API /graph")
-    print(request)
-
     edges: set[Edge] = set()
     nodes: set[Node] = set()
     errors: list[str] = []
@@ -251,8 +248,6 @@ def graph(request: GraphRequest) -> GraphResponce:
             for segment in segments:
                 edges.add(Edge(segment.source, segment.target, EdgeInfo(id, route(id))))
 
-    print(edges)
-
     for edge in edges:
         v = node(edge.source)
         if v is not None:
@@ -260,7 +255,5 @@ def graph(request: GraphRequest) -> GraphResponce:
         v = node(edge.target)
         if v is not None:
             nodes.add(v)
-
-    print(nodes)
 
     return GraphResponce(edges=list(edges), nodes=list(nodes), errors=errors)

@@ -63,8 +63,6 @@ async function updatePrompts(
   prevState: State,
   queryData: FormData,
 ): Promise<State> {
-  console.debug(prevState, queryData);
-
   const prompts = newPrompts(prevState.prompts, queryData);
 
   if (!prompts) {
@@ -91,8 +89,6 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   const loadGraph = useLoadGraph();
 
   const graph = new MultiDirectedGraph();
-
-  console.log(props);
 
   if (props.nodes) {
     for (const node of props.nodes) {
