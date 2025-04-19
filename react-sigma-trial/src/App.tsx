@@ -246,6 +246,8 @@ function App() {
           }}
         >
           <div>sample</div>
+
+          {/*
           <div className="select is-rounded">
             <select title="short input interpretation">
               <option>disabled</option>
@@ -253,6 +255,7 @@ function App() {
               <option disabled={true}>node</option>
             </select>
           </div>
+          */}
 
           <input type="hidden" name="action" value="add" />
           <input
