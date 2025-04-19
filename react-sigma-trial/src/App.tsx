@@ -14,7 +14,7 @@ import { MultiDirectedGraph } from "graphology";
 import { EdgeArrowProgram } from "sigma/rendering";
 
 import createClient from "openapi-fetch";
-import type { paths } from "./api-schema";
+import type { paths, components } from "./api-schema";
 
 import {
   EdgeCurvedArrowProgram,
@@ -26,19 +26,8 @@ import { LayoutForceControl } from "@react-sigma/layout-force";
 
 const client = createClient<paths>({ baseUrl: "/api" });
 
-type NodeId = string;
-
-export type Node = {
-  id: NodeId;
-  x: number;
-  y: number;
-};
-
-export type Edge = {
-  source: NodeId;
-  target: NodeId;
-  label: string;
-};
+type Edge = components["schemas"]["Edge"];
+type Node = components["schemas"]["Node"];
 
 export type State = {
   prompts?: string[];
@@ -55,7 +44,7 @@ function newPrompts(prevPrompts: string[] | undefined, queryData: FormData) {
       if (typeof p !== "string") {
         throw new Error("Invalid prompt: " + p);
       }
-      return [p].concat((prevPrompts ?? []));
+      return [p].concat(prevPrompts ?? []);
     }
     case "remove": {
       const stringifiedIndex = queryData.get("index");
@@ -78,38 +67,24 @@ async function updatePrompts(
 
   const prompts = newPrompts(prevState.prompts, queryData);
 
-  const nodes: Node[] = [];
-  const edges: Edge[] = [];
-
-  if (prompts) {
-    const { data, error } = await client.POST("/graph", {
-      body: { prompts: prompts },
-    });
-
-    if (!data) {
-      console.error(error);
-      return prevState;
-    }
-
-    for (const error of data.errors) {
-      console.error(error);
-    }
-    for (const node of data.nodes) {
-      nodes.push({ id: node.id, x: node.x, y: node.y });
-    }
-    for (const edge of data.edges) {
-      edges.push({
-        source: edge.source,
-        target: edge.target,
-        label: edge.label,
-      });
-    }
+  if (!prompts) {
+    return prevState;
   }
 
-  const ret = { prompts: prompts, nodes: nodes, edges: edges };
-  console.log("== ret ==");
-  console.debug(ret);
-  return ret;
+  const { data, error } = await client.POST("/graph", {
+    body: { prompts: prompts },
+  });
+
+  if (!data) {
+    console.error(error);
+    return prevState;
+  }
+
+  for (const error of data.errors) {
+    console.error(error);
+  }
+
+  return { prompts: prompts, nodes: data.nodes, edges: data.edges };
 }
 
 function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
@@ -132,10 +107,9 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   if (props.edges) {
     for (const edge of props.edges) {
       graph.addEdge(edge.source, edge.target, {
-        label: edge.label,
+        info: edge.info,
         type: "arrow",
         forceLabel: true,
-        size: 6,
       });
     }
   }
@@ -220,6 +194,8 @@ function GraphEvents() {
 function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
   const [edgeSize, SetEdgeSize] = useState(6);
+  const [enableLabelForRouteId, SetEnableLabelForRouteId] = useState(true);
+  const [enableLabelForRouteName, SetEnableLabelForRouteName] = useState(true);
 
   type EdgeReducerType = NonNullable<
     Parameters<typeof SigmaContainer>[0]["settings"]
@@ -228,9 +204,19 @@ function App() {
   const EdgeReducer: EdgeReducerType = useCallback(
     (_edge: EdgeReducerParameters[0], data: EdgeReducerParameters[1]) => {
       const size = "selected" in data ? edgeSize * 2 : edgeSize;
-      return { ...data, size: size };
+      const info: components["schemas"]["EdgeInfo"] = data.info;
+
+      const labelElements = [];
+      if (enableLabelForRouteId) {
+        labelElements.push(info.route_id);
+      }
+      if (enableLabelForRouteName) {
+        labelElements.push(info.route_name);
+      }
+
+      return { ...data, size: size, label: labelElements.join(", ") };
     },
-    [edgeSize],
+    [edgeSize, enableLabelForRouteId, enableLabelForRouteName],
   );
 
   return (
@@ -297,6 +283,31 @@ function App() {
                 ))}
               </div>
               <div>
+                <div className="field">
+                  <label className="label">edge label</label>
+                  <div className="checkboxes">
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={enableLabelForRouteId}
+                        onChange={(e) =>
+                          SetEnableLabelForRouteId(e.target.checked)
+                        }
+                      />
+                      route id
+                    </label>
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={enableLabelForRouteName}
+                        onChange={(e) =>
+                          SetEnableLabelForRouteName(e.target.checked)
+                        }
+                      />
+                      route name
+                    </label>
+                  </div>
+                </div>
                 <div className="field">
                   <label className="label">edge size</label>
                   <div className="control">

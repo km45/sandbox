@@ -24,10 +24,16 @@ class Node:
 
 
 @dataclass(frozen=True)
+class EdgeInfo:
+    route_id: RouteId
+    route_name: str
+
+
+@dataclass(frozen=True)
 class Edge:
     source: NodeId
     target: NodeId
-    label: str
+    info: EdgeInfo
 
 
 @dataclass(frozen=True)
@@ -109,7 +115,12 @@ def node(id: NodeId) -> Node | None:
 
 
 @app.get("/route")
-def route(
+def route(id: RouteId) -> str:
+    return f"route {id}"
+
+
+@app.get("/route/segments")
+def route_segments(
     id: RouteId, *, from_node: NodeId | None = None, to_node: NodeId | None = None
 ) -> list[RouteSegment] | None:
     routes: dict[RouteId, tuple[RouteSegment, ...]] = {
@@ -233,12 +244,12 @@ def graph(request: GraphRequest) -> GraphResponce:
         found = re.match(r"^ *route +(\d+)(?: +from +(\d+))?(?: +to +(\d+))? *", prompt)
         if found:
             id, from_node, to_node = found.groups()
-            route_segments = route(id, from_node=from_node, to_node=to_node)
-            if route_segments is None:
+            segments = route_segments(id, from_node=from_node, to_node=to_node)
+            if segments is None:
                 errors.append(f"route {id} not found")
                 continue
-            for route_segment in route_segments:
-                edges.add(Edge(route_segment.source, route_segment.target, id))
+            for segment in segments:
+                edges.add(Edge(segment.source, segment.target, EdgeInfo(id, route(id))))
 
     print(edges)
 
