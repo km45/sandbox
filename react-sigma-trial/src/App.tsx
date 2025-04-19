@@ -289,13 +289,18 @@ function App() {
                 ))}
               </div>
               <div>
-                edge size
-                <input
-                  type="text"
-                  className="input is-rounded"
-                  value={edgeSize}
-                  onChange={(e) => SetEdgeSize(Number(e.target.value))}
-                />
+                <div className="field">
+                  <label className="laebl">edge size</label>
+                  <div className="control">
+                    <input
+                      type="text"
+                      className="input is-rounded"
+                      value={edgeSize}
+                      onChange={(e) => SetEdgeSize(Number(e.target.value))}
+                    />
+                  </div>
+                  <p className="help">size of the selected edges: 2x</p>
+                </div>
               </div>
             </div>
           </div>
