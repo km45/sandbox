@@ -2,7 +2,6 @@ import { useActionState, useEffect, useState } from "react";
 import "./App.css";
 import {
   SigmaContainer,
-  SigmaContainerProps,
   useLoadGraph,
   ControlsContainer,
   ZoomControl,
