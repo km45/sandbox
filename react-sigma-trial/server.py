@@ -13,6 +13,7 @@ def root():
 
 
 NodeId = str
+RouteId = str
 
 
 @dataclass(frozen=True)
@@ -27,6 +28,12 @@ class Edge:
     source: NodeId
     target: NodeId
     label: str
+
+
+@dataclass(frozen=True)
+class RouteSegment:
+    source: NodeId
+    target: NodeId
 
 
 def node(id: NodeId) -> Node | None:
@@ -101,89 +108,89 @@ def node(id: NodeId) -> Node | None:
     return None
 
 
-def trail(id: str) -> tuple[Edge, ...] | None:
-    match id:
-        case "1":
-            return (
-                Edge("1", "2", id),
-                Edge("2", "3", id),
-                Edge("3", "4", id),
-            )
-        case "2":
-            return (
-                Edge("101", "2", id),
-                Edge("2", "3", id),
-                Edge("3", "104", id),
-            )
-        case "3":
-            return (
-                Edge("103", "3", id),
-                Edge("3", "2", id),
-                Edge("2", "102", id),
-            )
-        case "4":
-            return (
-                Edge("104", "210", id),
-                Edge("210", "211", id),
-                Edge("211", "212", id),
-                Edge("212", "213", id),
-                Edge("213", "214", id),
-                Edge("214", "215", id),
-                Edge("215", "216", id),
-                Edge("216", "217", id),
-                Edge("217", "218", id),
-                Edge("218", "219", id),
-                Edge("219", "220", id),
-                Edge("220", "221", id),
-                Edge("221", "222", id),
-                Edge("222", "223", id),
-                Edge("223", "224", id),
-                Edge("224", "225", id),
-                Edge("225", "226", id),
-                Edge("226", "227", id),
-                Edge("227", "228", id),
-                Edge("228", "229", id),
-                Edge("229", "230", id),
-            )
-        case "5":
-            return (
-                Edge("4", "310", id),
-                Edge("310", "311", id),
-                Edge("311", "312", id),
-                Edge("312", "313", id),
-                Edge("313", "314", id),
-                Edge("314", "315", id),
-                Edge("315", "316", id),
-                Edge("316", "317", id),
-                Edge("317", "318", id),
-                Edge("318", "319", id),
-                Edge("319", "320", id),
-                Edge("320", "321", id),
-                Edge("321", "322", id),
-                Edge("322", "323", id),
-                Edge("323", "324", id),
-                Edge("324", "325", id),
-                Edge("325", "326", id),
-                Edge("326", "327", id),
-                Edge("327", "328", id),
-                Edge("328", "329", id),
-                Edge("329", "330", id),
-            )
-        case "6":
-            return (
-                Edge("1", "410", id),
-                Edge("410", "420", id),
-                Edge("420", "430", id),
-            )
-        case "7":
-            return (
-                Edge("220", "221", id),
-                Edge("221", "325", id),
-                Edge("325", "324", id),
-                Edge("324", "420", id),
-            )
-        case _:
-            return None
+@app.get("/route")
+def route(id: RouteId) -> list[RouteSegment] | None:
+    routes: dict[RouteId, tuple[RouteSegment, ...]] = {
+        RouteId(1): (
+            RouteSegment(NodeId(1), NodeId(2)),
+            RouteSegment(NodeId(2), NodeId(3)),
+            RouteSegment(NodeId(3), NodeId(4)),
+        ),
+        RouteId(2): (
+            RouteSegment(NodeId(101), NodeId(2)),
+            RouteSegment(NodeId(2), NodeId(3)),
+            RouteSegment(NodeId(3), NodeId(104)),
+        ),
+        RouteId(3): (
+            RouteSegment(NodeId(103), NodeId(3)),
+            RouteSegment(NodeId(3), NodeId(2)),
+            RouteSegment(NodeId(2), NodeId(102)),
+        ),
+        RouteId(4): (
+            RouteSegment(NodeId(104), NodeId(210)),
+            RouteSegment(NodeId(210), NodeId(211)),
+            RouteSegment(NodeId(211), NodeId(212)),
+            RouteSegment(NodeId(212), NodeId(213)),
+            RouteSegment(NodeId(213), NodeId(214)),
+            RouteSegment(NodeId(214), NodeId(215)),
+            RouteSegment(NodeId(215), NodeId(216)),
+            RouteSegment(NodeId(216), NodeId(217)),
+            RouteSegment(NodeId(217), NodeId(218)),
+            RouteSegment(NodeId(218), NodeId(219)),
+            RouteSegment(NodeId(219), NodeId(220)),
+            RouteSegment(NodeId(220), NodeId(221)),
+            RouteSegment(NodeId(221), NodeId(222)),
+            RouteSegment(NodeId(222), NodeId(223)),
+            RouteSegment(NodeId(223), NodeId(224)),
+            RouteSegment(NodeId(224), NodeId(225)),
+            RouteSegment(NodeId(225), NodeId(226)),
+            RouteSegment(NodeId(226), NodeId(227)),
+            RouteSegment(NodeId(227), NodeId(228)),
+            RouteSegment(NodeId(228), NodeId(229)),
+            RouteSegment(NodeId(229), NodeId(230)),
+        ),
+        RouteId(5): (
+            RouteSegment(NodeId(4), NodeId(310)),
+            RouteSegment(NodeId(310), NodeId(311)),
+            RouteSegment(NodeId(311), NodeId(312)),
+            RouteSegment(NodeId(312), NodeId(313)),
+            RouteSegment(NodeId(313), NodeId(314)),
+            RouteSegment(NodeId(314), NodeId(315)),
+            RouteSegment(NodeId(315), NodeId(316)),
+            RouteSegment(NodeId(316), NodeId(317)),
+            RouteSegment(NodeId(317), NodeId(318)),
+            RouteSegment(NodeId(318), NodeId(319)),
+            RouteSegment(NodeId(319), NodeId(320)),
+            RouteSegment(NodeId(320), NodeId(321)),
+            RouteSegment(NodeId(321), NodeId(322)),
+            RouteSegment(NodeId(322), NodeId(323)),
+            RouteSegment(NodeId(323), NodeId(324)),
+            RouteSegment(NodeId(324), NodeId(325)),
+            RouteSegment(NodeId(325), NodeId(326)),
+            RouteSegment(NodeId(326), NodeId(327)),
+            RouteSegment(NodeId(327), NodeId(328)),
+            RouteSegment(NodeId(328), NodeId(329)),
+            RouteSegment(NodeId(329), NodeId(330)),
+        ),
+        RouteId(6): (
+            RouteSegment(NodeId(1), NodeId(410)),
+            RouteSegment(NodeId(410), NodeId(420)),
+            RouteSegment(NodeId(420), NodeId(430)),
+        ),
+        RouteId(7): (
+            RouteSegment(NodeId(220), NodeId(221)),
+            RouteSegment(NodeId(221), NodeId(325)),
+            RouteSegment(NodeId(325), NodeId(324)),
+            RouteSegment(NodeId(324), NodeId(420)),
+        ),
+    }
+
+    if id not in routes:
+        return None
+
+    segments = routes[id]
+
+    return segments
 
 
 class GraphRequest(BaseModel):
@@ -206,15 +213,15 @@ def graph(request: GraphRequest) -> GraphResponce:
     errors: list[str] = []
 
     for prompt in request.prompts:
-        found = re.findall(r"^ *trail +([0-9]+) *", prompt)
+        found = re.findall(r"^ *route +([0-9]+) *", prompt)
         if found:
             id = found[0]
-            v = trail(id)
-            if v is None:
-                errors.append(f"trail {id} not found")
+            route_segments = route(id)
+            if route_segments is None:
+                errors.append(f"route {id} not found")
                 continue
-            for edge in v:
-                edges.add(edge)
+            for route_segment in route_segments:
+                edges.add(Edge(route_segment.source, route_segment.target, id))
 
     print(edges)
 
