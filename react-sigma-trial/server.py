@@ -109,7 +109,9 @@ def node(id: NodeId) -> Node | None:
 
 
 @app.get("/route")
-def route(id: RouteId) -> list[RouteSegment] | None:
+def route(
+    id: RouteId, *, from_node: NodeId | None = None, to_node: NodeId | None = None
+) -> list[RouteSegment] | None:
     routes: dict[RouteId, tuple[RouteSegment, ...]] = {
         RouteId(1): (
             RouteSegment(NodeId(1), NodeId(2)),
@@ -190,6 +192,21 @@ def route(id: RouteId) -> list[RouteSegment] | None:
 
     segments = routes[id]
 
+    if from_node:
+        # empty if specified node is not found
+        index = next(
+            (i for i, segment in enumerate(segments) if segment.source == from_node),
+            len(segments),
+        )
+        segments = segments[index:]
+    if to_node:
+        # empty if specified node is not found
+        index = next(
+            (i for i, segment in enumerate(segments) if segment.target == to_node),
+            -1,
+        )
+        segments = segments[: index + 1]
+
     return segments
 
 
@@ -213,10 +230,10 @@ def graph(request: GraphRequest) -> GraphResponce:
     errors: list[str] = []
 
     for prompt in request.prompts:
-        found = re.findall(r"^ *route +([0-9]+) *", prompt)
+        found = re.match(r"^ *route +(\d+)(?: +from +(\d+))?(?: +to +(\d+))? *", prompt)
         if found:
-            id = found[0]
-            route_segments = route(id)
+            id, from_node, to_node = found.groups()
+            route_segments = route(id, from_node=from_node, to_node=to_node)
             if route_segments is None:
                 errors.append(f"route {id} not found")
                 continue

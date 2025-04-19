@@ -145,6 +145,8 @@ export interface operations {
         parameters: {
             query: {
                 id: string;
+                from_node?: string | null;
+                to_node?: string | null;
             };
             header?: never;
             path?: never;
