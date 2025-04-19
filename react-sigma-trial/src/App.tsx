@@ -298,7 +298,7 @@ function App() {
               </div>
               <div>
                 <div className="field">
-                  <label className="laebl">edge size</label>
+                  <label className="label">edge size</label>
                   <div className="control">
                     <input
                       type="text"
