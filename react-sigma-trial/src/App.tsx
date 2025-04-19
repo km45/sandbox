@@ -1,4 +1,4 @@
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 import "./App.css";
 import {
   SigmaContainer,
@@ -112,9 +112,6 @@ async function updatePrompts(
   return ret;
 }
 
-const EDGE_SIZE_DEFAULT = 6;
-const EDGE_SIZE_HIGHLIGHTED = 12;
-
 function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   const loadGraph = useLoadGraph();
 
@@ -128,7 +125,6 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
         x: node.x,
         y: node.y,
         label: node.id,
-        size: EDGE_SIZE_DEFAULT,
       });
     }
   }
@@ -221,16 +217,21 @@ function GraphEvents() {
   return null;
 }
 
-type EdgeReducerType = NonNullable<
-  Parameters<typeof SigmaContainer>[0]["settings"]
->["edgeReducer"];
-const EdgeReducer: EdgeReducerType = (_edge, data) => {
-  const size = "selected" in data ? EDGE_SIZE_HIGHLIGHTED : EDGE_SIZE_DEFAULT;
-  return { ...data, size: size };
-};
-
 function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
+  const [edgeSize, SetEdgeSize] = useState(6);
+
+  type EdgeReducerType = NonNullable<
+    Parameters<typeof SigmaContainer>[0]["settings"]
+  >["edgeReducer"];
+  type EdgeReducerParameters = Parameters<NonNullable<EdgeReducerType>>;
+  const EdgeReducer: EdgeReducerType = useCallback(
+    (_edge: EdgeReducerParameters[0], data: EdgeReducerParameters[1]) => {
+      const size = "selected" in data ? edgeSize * 2 : edgeSize;
+      return { ...data, size: size };
+    },
+    [edgeSize],
+  );
 
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column" }}>
@@ -286,6 +287,15 @@ function App() {
                     </form>
                   </div>
                 ))}
+              </div>
+              <div>
+                edge size
+                <input
+                  type="text"
+                  className="input is-rounded"
+                  value={edgeSize}
+                  onChange={(e) => SetEdgeSize(Number(e.target.value))}
+                />
               </div>
             </div>
           </div>
