@@ -114,10 +114,16 @@ export interface components {
         Node: {
             /** Id */
             id: string;
+            info: components["schemas"]["NodeInfo"];
+        };
+        /** NodeInfo */
+        NodeInfo: {
             /** X */
             x: number;
             /** Y */
             y: number;
+            /** Node Name */
+            node_name: string;
         };
         /** RouteSegment */
         RouteSegment: {

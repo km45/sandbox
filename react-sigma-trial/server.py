@@ -17,10 +17,16 @@ RouteId = str
 
 
 @dataclass(frozen=True)
-class Node:
-    id: NodeId
+class NodeInfo:
     x: int
     y: int
+    node_name: str
+
+
+@dataclass(frozen=True)
+class Node:
+    id: NodeId
+    info: NodeInfo
 
 
 @dataclass(frozen=True)
@@ -49,62 +55,66 @@ def node(id: NodeId) -> Node | None:
     #  0|   __2__3
     # -1|101102103104
     nodes = (
-        Node("1", 1, 1),
-        Node("2", 2, 0),
-        Node("3", 3, 0),
-        Node("4", 4, 1),
-        Node("101", 1, -1),
-        Node("102", 2, -1),
-        Node("103", 3, -1),
-        Node("104", 4, -1),
+        Node("1", NodeInfo(1, 1, "い町")),
+        Node("2", NodeInfo(2, 0, "ろ町")),
+        Node("3", NodeInfo(3, 0, "は町")),
+        Node("4", NodeInfo(4, 1, "に町")),
+        Node("101", NodeInfo(1, -1, "ほ町")),
+        Node("102", NodeInfo(2, -1, "へ町")),
+        Node("103", NodeInfo(3, -1, "と町")),
+        Node("104", NodeInfo(4, -1, "ち町")),
         # --
-        Node("210", 10, -2),
-        Node("211", 11, -2),
-        Node("212", 12, -2),
-        Node("213", 13, -2),
-        Node("214", 14, -2),
-        Node("215", 15, -2),
-        Node("216", 16, -2),
-        Node("217", 17, -2),
-        Node("218", 18, -2),
-        Node("219", 19, -2),
-        Node("220", 20, -2),
-        Node("221", 21, -2),
-        Node("222", 22, -2),
-        Node("223", 23, -2),
-        Node("224", 24, -2),
-        Node("225", 25, -2),
-        Node("226", 26, -2),
-        Node("227", 27, -2),
-        Node("228", 28, -2),
-        Node("229", 29, -2),
-        Node("230", 30, -2),
+        Node("210", NodeInfo(10, -2, "り町")),
+        Node("211", NodeInfo(11, -2, "ぬ町")),
+        Node("212", NodeInfo(12, -2, "る町")),
+        Node("213", NodeInfo(13, -2, "を町")),
+        Node("214", NodeInfo(14, -2, "わ町")),
+        Node("215", NodeInfo(15, -2, "か町")),
+        Node("216", NodeInfo(16, -2, "よ町")),
+        Node("217", NodeInfo(17, -2, "た町")),
+        Node("218", NodeInfo(18, -2, "れ町")),
+        Node("219", NodeInfo(19, -2, "そ町")),
+        Node("220", NodeInfo(20, -2, "つ町")),
+        Node("221", NodeInfo(21, -2, "ね町")),
+        Node("222", NodeInfo(22, -2, "な町")),
+        Node("223", NodeInfo(23, -2, "ら町")),
+        Node("224", NodeInfo(24, -2, "む町")),
+        Node("225", NodeInfo(25, -2, "う町")),
+        Node("226", NodeInfo(26, -2, "ゐ町")),
+        Node("227", NodeInfo(27, -2, "の町")),
+        Node("228", NodeInfo(28, -2, "お町")),
+        Node("229", NodeInfo(29, -2, "く町")),
+        Node("230", NodeInfo(30, -2, "や町")),
         # --
-        Node("310", 10, 2),
-        Node("311", 11, 2),
-        Node("312", 12, 2),
-        Node("313", 13, 2),
-        Node("314", 14, 2),
-        Node("315", 15, 2),
-        Node("316", 16, 2),
-        Node("317", 17, 2),
-        Node("318", 18, 2),
-        Node("319", 19, 2),
-        Node("320", 20, 2),
-        Node("321", 21, 2),
-        Node("322", 22, 2),
-        Node("323", 23, 2),
-        Node("324", 24, 2),
-        Node("325", 25, 2),
-        Node("326", 26, 2),
-        Node("327", 27, 2),
-        Node("328", 28, 2),
-        Node("329", 29, 2),
-        Node("330", 30, 2),
+        Node("310", NodeInfo(10, 2, "ま町")),
+        Node("311", NodeInfo(11, 2, "け町")),
+        Node("312", NodeInfo(12, 2, "ふ町")),
+        Node("313", NodeInfo(13, 2, "こ町")),
+        Node("314", NodeInfo(14, 2, "え町")),
+        Node("315", NodeInfo(15, 2, "て町")),
+        Node("316", NodeInfo(16, 2, "あ町")),
+        Node("317", NodeInfo(17, 2, "さ町")),
+        Node("318", NodeInfo(18, 2, "き町")),
+        Node("319", NodeInfo(19, 2, "ゆ町")),
+        Node("320", NodeInfo(20, 2, "め町")),
+        Node("321", NodeInfo(21, 2, "み町")),
+        Node("322", NodeInfo(22, 2, "し町")),
+        Node("323", NodeInfo(23, 2, "ゑ町")),
+        Node("324", NodeInfo(24, 2, "ひ町")),
+        Node("325", NodeInfo(25, 2, "も町")),
+        Node("326", NodeInfo(26, 2, "せ町")),
+        Node("327", NodeInfo(27, 2, "す町")),
+        Node("328", NodeInfo(28, 2, "甲町")),
+        Node("329", NodeInfo(29, 2, "乙町")),
+        Node("330", NodeInfo(30, 2, "丙町")),
         # --
-        Node("410", 0, 10),
-        Node("420", 0, 20),
-        Node("430", 0, 30),
+        Node("410", NodeInfo(0, 10, "丁町")),
+        Node("420", NodeInfo(0, 20, "戊町")),
+        Node("430", NodeInfo(0, 30, "己町")),
+        # 庚
+        # 辛
+        # 壬
+        # 癸
     )
 
     for node in nodes:

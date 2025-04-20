@@ -93,9 +93,9 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   if (props.nodes) {
     for (const node of props.nodes) {
       graph.addNode(node.id, {
-        x: node.x,
-        y: node.y,
-        label: node.id,
+        info: node.info,
+        x: node.info.x, // set initial values
+        y: node.info.y, // set initial values
       });
     }
   }
@@ -192,6 +192,8 @@ function App() {
   const [edgeSize, SetEdgeSize] = useState(6);
   const [enableLabelForRouteId, SetEnableLabelForRouteId] = useState(true);
   const [enableLabelForRouteName, SetEnableLabelForRouteName] = useState(false);
+  const [enableLabelForNodeId, SetEnableLabelForNodeId] = useState(true);
+  const [enableLabelForNodeName, SetEnableLabelForNodeName] = useState(false);
 
   type EdgeReducerType = NonNullable<
     Parameters<typeof SigmaContainer>[0]["settings"]
@@ -213,6 +215,27 @@ function App() {
       return { ...data, size: size, label: labelElements.join(", ") };
     },
     [edgeSize, enableLabelForRouteId, enableLabelForRouteName],
+  );
+
+  type NodeReducerType = NonNullable<
+    Parameters<typeof SigmaContainer>[0]["settings"]
+  >["nodeReducer"];
+  type NodeReducerParameters = Parameters<NonNullable<NodeReducerType>>;
+  const NodeReducer: NodeReducerType = useCallback(
+    (node: NodeReducerParameters[0], data: NodeReducerParameters[1]) => {
+      const info: components["schemas"]["NodeInfo"] = data.info;
+
+      const labelElements = [];
+      if (enableLabelForNodeId) {
+        labelElements.push(node);
+      }
+      if (enableLabelForNodeName) {
+        labelElements.push(info.node_name);
+      }
+
+      return { ...data, label: labelElements.join(", ") };
+    },
+    [enableLabelForNodeId, enableLabelForNodeName],
   );
 
   return (
@@ -280,6 +303,31 @@ function App() {
               </div>
               <div>
                 <div className="field">
+                  <label className="label">node label</label>
+                  <div className="checkboxes">
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={enableLabelForNodeId}
+                        onChange={(e) =>
+                          SetEnableLabelForNodeId(e.target.checked)
+                        }
+                      />
+                      node id
+                    </label>
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={enableLabelForNodeName}
+                        onChange={(e) =>
+                          SetEnableLabelForNodeName(e.target.checked)
+                        }
+                      />
+                      node name
+                    </label>
+                  </div>
+                </div>
+                <div className="field">
                   <label className="label">edge label</label>
                   <div className="checkboxes">
                     <label className="checkbox">
@@ -330,6 +378,7 @@ function App() {
                 renderEdgeLabels: true,
                 enableEdgeEvents: true,
                 edgeReducer: EdgeReducer,
+                nodeReducer: NodeReducer,
                 allowInvalidContainer: true,
               }}
             >
