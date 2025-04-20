@@ -28,9 +28,11 @@ const client = createClient<paths>({ baseUrl: "/api" });
 
 type Edge = components["schemas"]["Edge"];
 type Node = components["schemas"]["Node"];
+type PromptResult = components["schemas"]["Result"];
 
-export type State = {
+type State = {
   prompts?: string[];
+  promptResults?: PromptResult[];
   nodes?: Node[];
   edges?: Edge[];
 };
@@ -78,11 +80,12 @@ async function updatePrompts(
     return prevState;
   }
 
-  for (const error of data.errors) {
-    console.error(error);
-  }
-
-  return { prompts: prompts, nodes: data.nodes, edges: data.edges };
+  return {
+    prompts: prompts,
+    promptResults: data.results,
+    nodes: data.nodes,
+    edges: data.edges,
+  };
 }
 
 function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
@@ -314,21 +317,58 @@ function App() {
             >
               <div>{state.prompts?.length ?? 0} prompt(s)</div>
               <div style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}>
-                {state.prompts?.map((prompt, index) => (
-                  <div key={index}>
-                    <form action={submitAction}>
-                      <input type="hidden" name="action" value="remove" />
-                      <input type="hidden" name="index" value={index} />
-                      <article className="message">
-                        <div className="message-header">
-                          {prompt}
-                          <button className="delete" />
-                        </div>
-                        <div className="message-body">dummy</div>
-                      </article>
-                    </form>
-                  </div>
-                ))}
+                {state.prompts?.map((prompt, index) => {
+                  const result = state.promptResults?.[index];
+
+                  const articleClassName = result?.error
+                    ? "message is-danger"
+                    : result?.warnings
+                      ? "message is-warning"
+                      : "message is-success";
+
+                  return (
+                    <div key={index}>
+                      <form action={submitAction}>
+                        <input type="hidden" name="action" value="remove" />
+                        <input type="hidden" name="index" value={index} />
+                        <article className={articleClassName}>
+                          <div className="message-header">
+                            {prompt}
+                            <button className="delete" />
+                          </div>
+                          <div className="message-body">
+                            {result?.error && (
+                              <span key={index} className="icon-text">
+                                <span className="icon has-text-danger">
+                                  <i className="fas fa-ban"></i>
+                                </span>
+                                <span>{result.error}</span>
+                              </span>
+                            )}
+                            {result?.warnings &&
+                              result.warnings.map((warning, index) => (
+                                <span key={index} className="icon-text">
+                                  <span className="icon has-text-warning">
+                                    <i className="fas fa-triangle-exclamation"></i>
+                                  </span>
+                                  <span>{warning}</span>
+                                </span>
+                              ))}
+                            {result?.explanations &&
+                              result.explanations.map((explanation, index) => (
+                                <span key={index} className="icon-text">
+                                  <span className="icon has-text-success">
+                                    <i className="fas fa-square-check"></i>
+                                  </span>
+                                  <span>{explanation}</span>
+                                </span>
+                              ))}
+                          </div>
+                        </article>
+                      </form>
+                    </div>
+                  );
+                })}
               </div>
               <div>
                 <div className="field">

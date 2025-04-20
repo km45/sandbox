@@ -102,8 +102,8 @@ export interface components {
             edges: components["schemas"]["Edge"][];
             /** Nodes */
             nodes: components["schemas"]["Node"][];
-            /** Errors */
-            errors: string[];
+            /** Results */
+            results: components["schemas"]["Result"][];
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -124,6 +124,15 @@ export interface components {
             y: number;
             /** Node Name */
             node_name: string;
+        };
+        /** Result */
+        Result: {
+            /** Error */
+            error?: string | null;
+            /** Warnings */
+            warnings?: string[] | null;
+            /** Explanations */
+            explanations?: string[] | null;
         };
         /** RouteSegment */
         RouteSegment: {

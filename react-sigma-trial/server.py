@@ -126,7 +126,7 @@ def node(id: NodeId) -> Node | None:
 
 @app.get("/route")
 def route(id: RouteId) -> str:
-    return f"route {id}"
+    return f"{id}号線"
 
 
 @app.get("/route/segments")
@@ -235,29 +235,62 @@ class GraphRequest(BaseModel):
     prompts: list[str]
 
 
+class Result(BaseModel):
+    error: str | None = None
+    warnings: list[str] | None = None
+    explanations: list[str] | None = None
+
+
 class GraphResponce(BaseModel):
     edges: list[Edge]
     nodes: list[Node]
-    errors: list[str]
+    results: list[Result]
 
 
 @app.post("/graph")
 def graph(request: GraphRequest) -> GraphResponce:
     edges: set[Edge] = set()
     nodes: set[Node] = set()
-    errors: list[str] = []
+    results: list[Result] = []
 
     for prompt in request.prompts:
+        warnings: list[str] = []
+        explanations: list[str] = []
+
         found = re.match(r"^ *route +(\d+)(?: +from +(\d+))?(?: +to +(\d+))? *", prompt)
         if found:
             id, from_node, to_node = found.groups()
             segments = route_segments(id, from_node=from_node, to_node=to_node)
             if segments is None:
-                errors.append(f"route {id} not found")
+                results.append(Result(error=f"Not found route {id}."))
                 continue
+            route_name = route(id)
             for segment in segments:
-                edges.add(Edge(segment.source, segment.target, EdgeInfo(id, route(id))))
+                edges.add(
+                    Edge(segment.source, segment.target, EdgeInfo(id, route_name))
+                )
+            if len(segments) == 0:
+                warnings.append("No segments.")
+            explanations.append(route_name)
 
+            if from_node:
+                v = node(from_node)
+                if v is None:
+                    warnings.append(f"Not found node {from_node}.")
+                else:
+                    explanations.append(f"{v.info.node_name}から")
+            if to_node:
+                v = node(to_node)
+                if v is None:
+                    warnings.append(f"Not found node {to_node}.")
+                else:
+                    explanations.append(f"{v.info.node_name}まで")
+            results.append(
+                Result(
+                    warnings=warnings if len(warnings) > 0 else None,
+                    explanations=explanations if len(explanations) > 0 else None,
+                )
+            )
     for edge in edges:
         v = node(edge.source)
         if v is not None:
@@ -266,4 +299,4 @@ def graph(request: GraphRequest) -> GraphResponce:
         if v is not None:
             nodes.add(v)
 
-    return GraphResponce(edges=list(edges), nodes=list(nodes), errors=errors)
+    return GraphResponce(edges=list(edges), nodes=list(nodes), results=results)
