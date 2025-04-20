@@ -105,7 +105,6 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
       graph.addEdge(edge.source, edge.target, {
         info: edge.info,
         type: "arrow",
-        forceLabel: true,
       });
     }
   }
@@ -190,6 +189,12 @@ function GraphEvents() {
 function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
   const [edgeSize, SetEdgeSize] = useState(6);
+
+  const [enableForceLabelForEdges, setEnableForceLabelForEdges] =
+    useState(true);
+  const [enableForceLabelForNodes, setEnableForceLabelForNodes] =
+    useState(false);
+
   const [enableLabelForRouteId, SetEnableLabelForRouteId] = useState(true);
   const [enableLabelForRouteName, SetEnableLabelForRouteName] = useState(false);
   const [enableLabelForNodeId, SetEnableLabelForNodeId] = useState(true);
@@ -202,8 +207,8 @@ function App() {
   const EdgeReducer: EdgeReducerType = useCallback(
     (_edge: EdgeReducerParameters[0], data: EdgeReducerParameters[1]) => {
       const size = "selected" in data ? edgeSize * 2 : edgeSize;
-      const info: components["schemas"]["EdgeInfo"] = data.info;
 
+      const info: components["schemas"]["EdgeInfo"] = data.info;
       const labelElements = [];
       if (enableLabelForRouteId) {
         labelElements.push(info.route_id);
@@ -212,9 +217,20 @@ function App() {
         labelElements.push(info.route_name);
       }
 
-      return { ...data, size: size, label: labelElements.join(", ") };
+      return {
+        ...data,
+        size: size,
+        forceLabel: enableForceLabelForEdges,
+        label: labelElements.join(", "),
+      };
     },
-    [edgeSize, enableLabelForRouteId, enableLabelForRouteName],
+    [
+      edgeSize,
+      enableForceLabelForEdges,
+      // for label elements
+      enableLabelForRouteId,
+      enableLabelForRouteName,
+    ],
   );
 
   type NodeReducerType = NonNullable<
@@ -224,7 +240,6 @@ function App() {
   const NodeReducer: NodeReducerType = useCallback(
     (node: NodeReducerParameters[0], data: NodeReducerParameters[1]) => {
       const info: components["schemas"]["NodeInfo"] = data.info;
-
       const labelElements = [];
       if (enableLabelForNodeId) {
         labelElements.push(node);
@@ -233,9 +248,18 @@ function App() {
         labelElements.push(info.node_name);
       }
 
-      return { ...data, label: labelElements.join(", ") };
+      return {
+        ...data,
+        forceLabel: enableForceLabelForNodes,
+        label: labelElements.join(", "),
+      };
     },
-    [enableLabelForNodeId, enableLabelForNodeName],
+    [
+      enableForceLabelForNodes,
+      // for label elements
+      enableLabelForNodeId,
+      enableLabelForNodeName,
+    ],
   );
 
   return (
@@ -308,6 +332,16 @@ function App() {
                     <label className="checkbox">
                       <input
                         type="checkbox"
+                        checked={enableForceLabelForNodes}
+                        onChange={(e) =>
+                          setEnableForceLabelForNodes(e.target.checked)
+                        }
+                      />
+                      force
+                    </label>
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
                         checked={enableLabelForNodeId}
                         onChange={(e) =>
                           SetEnableLabelForNodeId(e.target.checked)
@@ -330,6 +364,16 @@ function App() {
                 <div className="field">
                   <label className="label">edge label</label>
                   <div className="checkboxes">
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={enableForceLabelForEdges}
+                        onChange={(e) =>
+                          setEnableForceLabelForEdges(e.target.checked)
+                        }
+                      />
+                      force
+                    </label>
                     <label className="checkbox">
                       <input
                         type="checkbox"
