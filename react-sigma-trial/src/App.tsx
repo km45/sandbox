@@ -286,12 +286,17 @@ function App() {
           */}
 
           <input type="hidden" name="action" value="add" />
-          <input
-            type="text"
-            name="prompt"
-            placeholder="type a prompt here"
-            className="input is-rounded"
-          />
+          <div className="control has-icons-left" style={{ width: "100%" }}>
+            <input
+              type="text"
+              name="prompt"
+              placeholder="type a prompt here"
+              className="input is-rounded"
+            />
+            <span className="icon is-left">
+              <i className="fas fa-terminal"></i>
+            </span>
+          </div>
         </form>
       </div>
       <div style={{ flexGrow: 1 }}>
