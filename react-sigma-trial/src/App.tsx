@@ -191,7 +191,7 @@ function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
   const [edgeSize, SetEdgeSize] = useState(6);
   const [enableLabelForRouteId, SetEnableLabelForRouteId] = useState(true);
-  const [enableLabelForRouteName, SetEnableLabelForRouteName] = useState(true);
+  const [enableLabelForRouteName, SetEnableLabelForRouteName] = useState(false);
 
   type EdgeReducerType = NonNullable<
     Parameters<typeof SigmaContainer>[0]["settings"]
