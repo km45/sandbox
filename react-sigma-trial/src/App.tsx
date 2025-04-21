@@ -356,12 +356,7 @@ function App() {
                               ))}
                             {result?.explanations &&
                               result.explanations.map((explanation, index) => (
-                                <span key={index} className="icon-text">
-                                  <span className="icon has-text-success">
-                                    <i className="fas fa-square-check"></i>
-                                  </span>
-                                  <span>{explanation}</span>
-                                </span>
+                                <div key={index}>{explanation}</div>
                               ))}
                           </div>
                         </article>
