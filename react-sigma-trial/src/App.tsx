@@ -191,6 +191,11 @@ function GraphEvents() {
 
 function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
+
+  const [tab, setTab] = useState<"prompts" | "config" | "inspector" | "pin">(
+    "prompts",
+  );
+
   const [edgeSize, SetEdgeSize] = useState(6);
 
   const [enableForceLabelForEdges, setEnableForceLabelForEdges] =
@@ -315,140 +320,186 @@ function App() {
                 height: "100%",
               }}
             >
-              <div>{state.prompts?.length ?? 0} prompt(s)</div>
-              <div style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}>
-                {state.prompts?.map((prompt, index) => {
-                  const result = state.promptResults?.[index];
+              <div className="tabs is-fullwidth">
+                <ul>
+                  <li className={tab === "prompts" ? "is-active" : undefined}>
+                    <a onClick={() => setTab("prompts")}>
+                      <span className="icon is-small">
+                        <i className="fas fa-route" aria-hidden="true"></i>
+                      </span>
+                      <span>{state.prompts?.length ?? 0}</span>
+                    </a>
+                  </li>
 
-                  const articleClassName = result?.error
-                    ? "message is-danger"
-                    : result?.warnings
-                      ? "message is-warning"
-                      : "message is-success";
+                  <li className={tab === "config" ? "is-active" : undefined}>
+                    <a onClick={() => setTab("config")}>
+                      <span className="icon is-small">
+                        <i className="fas fa-sliders-h" aria-hidden="true"></i>
+                      </span>
+                      <span>&#8203;</span>
+                    </a>
+                  </li>
+                  <li className={tab === "inspector" ? "is-active" : undefined}>
+                    <a onClick={() => setTab("inspector")}>
+                      <span className="icon is-small">
+                        <i className="fas fa-ruler" aria-hidden="true"></i>
+                      </span>
+                      <span>&#8203;</span>
+                    </a>
+                  </li>
+                  <li className={tab === "pin" ? "is-active" : undefined}>
+                    <a onClick={() => setTab("pin")}>
+                      <span className="icon is-small">
+                        <i className="fas fa-map-pin" aria-hidden="true"></i>
+                      </span>
+                      <span>&#8203;</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              {tab === "prompts" && (
+                <>
+                  <div
+                    style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}
+                  >
+                    {state.prompts?.map((prompt, index) => {
+                      const result = state.promptResults?.[index];
 
-                  return (
-                    <div key={index}>
-                      <form action={submitAction}>
-                        <input type="hidden" name="action" value="remove" />
-                        <input type="hidden" name="index" value={index} />
-                        <article className={articleClassName}>
-                          <div className="message-header">
-                            {prompt}
-                            <button className="delete" />
-                          </div>
-                          <div className="message-body">
-                            {result?.error && (
-                              <span key={index} className="icon-text">
-                                <span className="icon has-text-danger">
-                                  <i className="fas fa-ban"></i>
-                                </span>
-                                <span>{result.error}</span>
-                              </span>
-                            )}
-                            {result?.warnings &&
-                              result.warnings.map((warning, index) => (
-                                <span key={index} className="icon-text">
-                                  <span className="icon has-text-warning">
-                                    <i className="fas fa-triangle-exclamation"></i>
+                      const articleClassName = result?.error
+                        ? "message is-danger"
+                        : result?.warnings
+                          ? "message is-warning"
+                          : "message is-success";
+
+                      return (
+                        <div key={index}>
+                          <form action={submitAction}>
+                            <input type="hidden" name="action" value="remove" />
+                            <input type="hidden" name="index" value={index} />
+                            <article className={articleClassName}>
+                              <div className="message-header">
+                                {prompt}
+                                <button className="delete" />
+                              </div>
+                              <div className="message-body">
+                                {result?.error && (
+                                  <span key={index} className="icon-text">
+                                    <span className="icon has-text-danger">
+                                      <i className="fas fa-ban"></i>
+                                    </span>
+                                    <span>{result.error}</span>
                                   </span>
-                                  <span>{warning}</span>
-                                </span>
-                              ))}
-                            {result?.explanations &&
-                              result.explanations.map((explanation, index) => (
-                                <div key={index}>{explanation}</div>
-                              ))}
-                          </div>
-                        </article>
-                      </form>
+                                )}
+                                {result?.warnings &&
+                                  result.warnings.map((warning, index) => (
+                                    <span key={index} className="icon-text">
+                                      <span className="icon has-text-warning">
+                                        <i className="fas fa-triangle-exclamation"></i>
+                                      </span>
+                                      <span>{warning}</span>
+                                    </span>
+                                  ))}
+                                {result?.explanations &&
+                                  result.explanations.map(
+                                    (explanation, index) => (
+                                      <div key={index}>{explanation}</div>
+                                    ),
+                                  )}
+                              </div>
+                            </article>
+                          </form>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+              {tab === "config" && (
+                <div>
+                  <div className="field">
+                    <label className="label">node label</label>
+                    <div className="checkboxes">
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={enableForceLabelForNodes}
+                          onChange={(e) =>
+                            setEnableForceLabelForNodes(e.target.checked)
+                          }
+                        />
+                        force
+                      </label>
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={enableLabelForNodeId}
+                          onChange={(e) =>
+                            SetEnableLabelForNodeId(e.target.checked)
+                          }
+                        />
+                        node id
+                      </label>
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={enableLabelForNodeName}
+                          onChange={(e) =>
+                            SetEnableLabelForNodeName(e.target.checked)
+                          }
+                        />
+                        node name
+                      </label>
                     </div>
-                  );
-                })}
-              </div>
-              <div>
-                <div className="field">
-                  <label className="label">node label</label>
-                  <div className="checkboxes">
-                    <label className="checkbox">
+                  </div>
+                  <div className="field">
+                    <label className="label">edge label</label>
+                    <div className="checkboxes">
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={enableForceLabelForEdges}
+                          onChange={(e) =>
+                            setEnableForceLabelForEdges(e.target.checked)
+                          }
+                        />
+                        force
+                      </label>
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={enableLabelForRouteId}
+                          onChange={(e) =>
+                            SetEnableLabelForRouteId(e.target.checked)
+                          }
+                        />
+                        route id
+                      </label>
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={enableLabelForRouteName}
+                          onChange={(e) =>
+                            SetEnableLabelForRouteName(e.target.checked)
+                          }
+                        />
+                        route name
+                      </label>
+                    </div>
+                  </div>
+                  <div className="field">
+                    <label className="label">edge size</label>
+                    <div className="control">
                       <input
-                        type="checkbox"
-                        checked={enableForceLabelForNodes}
-                        onChange={(e) =>
-                          setEnableForceLabelForNodes(e.target.checked)
-                        }
+                        type="text"
+                        className="input is-rounded"
+                        value={edgeSize}
+                        onChange={(e) => SetEdgeSize(Number(e.target.value))}
                       />
-                      force
-                    </label>
-                    <label className="checkbox">
-                      <input
-                        type="checkbox"
-                        checked={enableLabelForNodeId}
-                        onChange={(e) =>
-                          SetEnableLabelForNodeId(e.target.checked)
-                        }
-                      />
-                      node id
-                    </label>
-                    <label className="checkbox">
-                      <input
-                        type="checkbox"
-                        checked={enableLabelForNodeName}
-                        onChange={(e) =>
-                          SetEnableLabelForNodeName(e.target.checked)
-                        }
-                      />
-                      node name
-                    </label>
+                    </div>
+                    <p className="help">size of the selected edges: 2x</p>
                   </div>
                 </div>
-                <div className="field">
-                  <label className="label">edge label</label>
-                  <div className="checkboxes">
-                    <label className="checkbox">
-                      <input
-                        type="checkbox"
-                        checked={enableForceLabelForEdges}
-                        onChange={(e) =>
-                          setEnableForceLabelForEdges(e.target.checked)
-                        }
-                      />
-                      force
-                    </label>
-                    <label className="checkbox">
-                      <input
-                        type="checkbox"
-                        checked={enableLabelForRouteId}
-                        onChange={(e) =>
-                          SetEnableLabelForRouteId(e.target.checked)
-                        }
-                      />
-                      route id
-                    </label>
-                    <label className="checkbox">
-                      <input
-                        type="checkbox"
-                        checked={enableLabelForRouteName}
-                        onChange={(e) =>
-                          SetEnableLabelForRouteName(e.target.checked)
-                        }
-                      />
-                      route name
-                    </label>
-                  </div>
-                </div>
-                <div className="field">
-                  <label className="label">edge size</label>
-                  <div className="control">
-                    <input
-                      type="text"
-                      className="input is-rounded"
-                      value={edgeSize}
-                      onChange={(e) => SetEdgeSize(Number(e.target.value))}
-                    />
-                  </div>
-                  <p className="help">size of the selected edges: 2x</p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
           <div style={{ flexGrow: 1 }}>
