@@ -372,7 +372,7 @@ function App() {
                           : "message is-success";
 
                       return (
-                        <div key={index}>
+                        <div className="block" key={index}>
                           <form action={submitAction}>
                             <input type="hidden" name="action" value="remove" />
                             <input type="hidden" name="index" value={index} />
