@@ -1,10 +1,4 @@
-import {
-  useActionState,
-  useCallback,
-  useEffect,
-  useState,
-  useMemo,
-} from "react";
+import React, { useActionState, useCallback, useEffect, useState } from "react";
 import "./App.css";
 import {
   SigmaContainer,
@@ -41,6 +35,11 @@ type State = {
   promptResults?: PromptResult[];
   nodes?: Node[];
   edges?: Edge[];
+};
+
+type NodeId = Node["id"];
+type Pins = {
+  [key: NodeId]: { x: number; y: number };
 };
 
 function newPrompts(prevPrompts: string[] | undefined, queryData: FormData) {
@@ -94,18 +93,20 @@ async function updatePrompts(
   };
 }
 
-function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
-  const loadGraph = useLoadGraph();
+const MyGraph = React.memo(
+  (props: { nodes?: Node[]; edges?: Edge[]; pins?: Pins }) => {
+    const loadGraph = useLoadGraph();
 
-  const graph = useMemo(() => {
     const graph = new MultiDirectedGraph();
 
     if (props.nodes) {
       for (const node of props.nodes) {
+        const x = props.pins?.[node.id]?.x ?? node.info.x;
+        const y = props.pins?.[node.id]?.y ?? node.info.y;
         graph.addNode(node.id, {
           info: node.info,
-          x: node.info.x, // set initial values
-          y: node.info.y, // set initial values
+          x: x,
+          y: y,
         });
       }
     }
@@ -132,14 +133,24 @@ function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
       }
     });
 
-    return graph;
-  }, [props.nodes, props.edges]);
+    loadGraph(graph);
+    return null;
+  },
+  (prevProps, nextProps) => {
+    if (prevProps.nodes !== nextProps.nodes) {
+      return false;
+    }
+    if (prevProps.edges !== nextProps.edges) {
+      return false;
+    }
+    // prevent re-rendering by `pins`
+    return true;
+  },
+);
 
-  loadGraph(graph);
-  return null;
-}
-
-function GraphEvents() {
+function GraphEvents(props: {
+  onPinNode: (node: string, x: number, y: number) => void;
+}) {
   const registerEvents = useRegisterEvents();
   const sigma = useSigma();
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
@@ -183,6 +194,10 @@ function GraphEvents() {
       },
       mouseup: () => {
         if (draggedNode) {
+          const node = draggedNode;
+          const x = sigma.getGraph().getNodeAttribute(node, "x");
+          const y = sigma.getGraph().getNodeAttribute(node, "y");
+          props.onPinNode(node, x, y);
           setDraggedNode(null);
         }
       },
@@ -193,7 +208,7 @@ function GraphEvents() {
         }
       },
     });
-  }, [registerEvents, sigma, draggedNode]);
+  }, [registerEvents, sigma, draggedNode, props]);
 
   return null;
 }
@@ -216,6 +231,8 @@ function App() {
   const [enableLabelForRouteName, SetEnableLabelForRouteName] = useState(false);
   const [enableLabelForNodeId, SetEnableLabelForNodeId] = useState(true);
   const [enableLabelForNodeName, SetEnableLabelForNodeName] = useState(false);
+
+  const [pins, setPins] = useState<Pins>({});
 
   type EdgeReducerType = NonNullable<
     Parameters<typeof SigmaContainer>[0]["settings"]
@@ -509,6 +526,15 @@ function App() {
                   </div>
                 </div>
               )}
+              {tab === "inspector" && <></>}
+              {tab === "pin" && (
+                <>
+                  <div>pinned nodes</div>
+                  {Object.keys(pins).map((key, index) => (
+                    <div key={index}>{key}</div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
           <div style={{ flexGrow: 1 }}>
@@ -526,8 +552,15 @@ function App() {
                 allowInvalidContainer: true,
               }}
             >
-              <MyGraph nodes={state.nodes} edges={state.edges} />
-              <GraphEvents />
+              <MyGraph nodes={state.nodes} edges={state.edges} pins={pins} />
+              <GraphEvents
+                onPinNode={(node, x, y) => {
+                  setPins({
+                    ...pins,
+                    [node]: { x: x, y: y },
+                  });
+                }}
+              />
               <ControlsContainer position={"bottom-right"}>
                 <ZoomControl />
                 <FullScreenControl />
