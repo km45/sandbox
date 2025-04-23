@@ -1,4 +1,10 @@
-import { useActionState, useCallback, useEffect, useState } from "react";
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import "./App.css";
 import {
   SigmaContainer,
@@ -91,43 +97,46 @@ async function updatePrompts(
 function MyGraph(props: { nodes?: Node[]; edges?: Edge[] }) {
   const loadGraph = useLoadGraph();
 
-  const graph = new MultiDirectedGraph();
+  const graph = useMemo(() => {
+    const graph = new MultiDirectedGraph();
 
-  if (props.nodes) {
-    for (const node of props.nodes) {
-      graph.addNode(node.id, {
-        info: node.info,
-        x: node.info.x, // set initial values
-        y: node.info.y, // set initial values
-      });
+    if (props.nodes) {
+      for (const node of props.nodes) {
+        graph.addNode(node.id, {
+          info: node.info,
+          x: node.info.x, // set initial values
+          y: node.info.y, // set initial values
+        });
+      }
     }
-  }
 
-  if (props.edges) {
-    for (const edge of props.edges) {
-      graph.addEdge(edge.source, edge.target, {
-        info: edge.info,
-        type: "arrow",
-      });
+    if (props.edges) {
+      for (const edge of props.edges) {
+        graph.addEdge(edge.source, edge.target, {
+          info: edge.info,
+          type: "arrow",
+        });
+      }
     }
-  }
 
-  indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex" });
+    indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex" });
 
-  graph.forEachEdge((edge, { parallelIndex }) => {
-    if (typeof parallelIndex === "number") {
-      graph.mergeEdgeAttributes(edge, {
-        type: "curvedArrow",
-        curvature: DEFAULT_EDGE_CURVATURE * parallelIndex,
-      });
-    } else {
-      graph.setEdgeAttribute(edge, "type", "arrow");
-    }
-  });
+    graph.forEachEdge((edge, { parallelIndex }) => {
+      if (typeof parallelIndex === "number") {
+        graph.mergeEdgeAttributes(edge, {
+          type: "curvedArrow",
+          curvature: DEFAULT_EDGE_CURVATURE * parallelIndex,
+        });
+      } else {
+        graph.setEdgeAttribute(edge, "type", "arrow");
+      }
+    });
+
+    return graph;
+  }, [props.nodes, props.edges]);
 
   loadGraph(graph);
-
-  return <></>;
+  return null;
 }
 
 function GraphEvents() {
