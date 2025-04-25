@@ -1,4 +1,4 @@
-import React, { useActionState, useCallback, useEffect, useState } from "react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 import "./App.css";
 import {
   SigmaContainer,
@@ -93,60 +93,48 @@ async function updatePrompts(
   };
 }
 
-const MyGraph = React.memo(
-  (props: { nodes?: Node[]; edges?: Edge[]; pins?: Pins }) => {
-    const loadGraph = useLoadGraph();
+const MyGraph = (props: { nodes?: Node[]; edges?: Edge[]; pins?: Pins }) => {
+  const loadGraph = useLoadGraph();
 
-    const graph = new MultiDirectedGraph();
+  const graph = new MultiDirectedGraph();
 
-    if (props.nodes) {
-      for (const node of props.nodes) {
-        const x = props.pins?.[node.id]?.x ?? node.info.x;
-        const y = props.pins?.[node.id]?.y ?? node.info.y;
-        graph.addNode(node.id, {
-          info: node.info,
-          x: x,
-          y: y,
-        });
-      }
+  if (props.nodes) {
+    for (const node of props.nodes) {
+      const x = props.pins?.[node.id]?.x ?? node.info.x;
+      const y = props.pins?.[node.id]?.y ?? node.info.y;
+      graph.addNode(node.id, {
+        info: node.info,
+        x: x,
+        y: y,
+      });
     }
+  }
 
-    if (props.edges) {
-      for (const edge of props.edges) {
-        graph.addEdge(edge.source, edge.target, {
-          info: edge.info,
-          type: "arrow",
-        });
-      }
+  if (props.edges) {
+    for (const edge of props.edges) {
+      graph.addEdge(edge.source, edge.target, {
+        info: edge.info,
+        type: "arrow",
+      });
     }
+  }
 
-    indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex" });
+  indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex" });
 
-    graph.forEachEdge((edge, { parallelIndex }) => {
-      if (typeof parallelIndex === "number") {
-        graph.mergeEdgeAttributes(edge, {
-          type: "curvedArrow",
-          curvature: DEFAULT_EDGE_CURVATURE * parallelIndex,
-        });
-      } else {
-        graph.setEdgeAttribute(edge, "type", "arrow");
-      }
-    });
-
-    loadGraph(graph);
-    return null;
-  },
-  (prevProps, nextProps) => {
-    if (prevProps.nodes !== nextProps.nodes) {
-      return false;
+  graph.forEachEdge((edge, { parallelIndex }) => {
+    if (typeof parallelIndex === "number") {
+      graph.mergeEdgeAttributes(edge, {
+        type: "curvedArrow",
+        curvature: DEFAULT_EDGE_CURVATURE * parallelIndex,
+      });
+    } else {
+      graph.setEdgeAttribute(edge, "type", "arrow");
     }
-    if (prevProps.edges !== nextProps.edges) {
-      return false;
-    }
-    // prevent re-rendering by `pins`
-    return true;
-  },
-);
+  });
+
+  loadGraph(graph);
+  return null;
+};
 
 function GraphEvents(props: {
   onPinNode: (node: string, x: number, y: number) => void;
