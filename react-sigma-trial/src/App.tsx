@@ -372,64 +372,60 @@ function App() {
                 </ul>
               </div>
               {tab === "prompts" && (
-                <>
-                  <div
-                    style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}
-                  >
-                    {state.prompts?.map((prompt, index) => {
-                      const result = state.promptResults?.[index];
+                <div style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}>
+                  {state.prompts?.map((prompt, index) => {
+                    const result = state.promptResults?.[index];
 
-                      const articleClassName = result?.error
-                        ? "message is-danger"
-                        : result?.warnings
-                          ? "message is-warning"
-                          : "message is-success";
+                    const articleClassName = result?.error
+                      ? "message is-danger"
+                      : result?.warnings
+                        ? "message is-warning"
+                        : "message is-success";
 
-                      return (
-                        <div className="block" key={index}>
-                          <form action={submitAction}>
-                            <input type="hidden" name="action" value="remove" />
-                            <input type="hidden" name="index" value={index} />
-                            <article className={articleClassName}>
-                              <div className="message-header">
-                                {prompt}
-                                <button className="delete" />
-                              </div>
-                              <div className="message-body">
-                                {result?.error && (
-                                  <span key={index} className="icon-text">
-                                    <span className="icon has-text-danger">
-                                      <i className="fas fa-ban"></i>
-                                    </span>
-                                    <span>{result.error}</span>
+                    return (
+                      <div className="block" key={index}>
+                        <form action={submitAction}>
+                          <input type="hidden" name="action" value="remove" />
+                          <input type="hidden" name="index" value={index} />
+                          <article className={articleClassName}>
+                            <div className="message-header">
+                              {prompt}
+                              <button className="delete" />
+                            </div>
+                            <div className="message-body">
+                              {result?.error && (
+                                <span key={index} className="icon-text">
+                                  <span className="icon has-text-danger">
+                                    <i className="fas fa-ban"></i>
                                   </span>
-                                )}
-                                {result?.warnings &&
-                                  result.warnings.map((warning, index) => (
-                                    <span key={index} className="icon-text">
-                                      <span className="icon has-text-warning">
-                                        <i className="fas fa-triangle-exclamation"></i>
-                                      </span>
-                                      <span>{warning}</span>
+                                  <span>{result.error}</span>
+                                </span>
+                              )}
+                              {result?.warnings &&
+                                result.warnings.map((warning, index) => (
+                                  <span key={index} className="icon-text">
+                                    <span className="icon has-text-warning">
+                                      <i className="fas fa-triangle-exclamation"></i>
                                     </span>
-                                  ))}
-                                {result?.explanations &&
-                                  result.explanations.map(
-                                    (explanation, index) => (
-                                      <div key={index}>{explanation}</div>
-                                    ),
-                                  )}
-                              </div>
-                            </article>
-                          </form>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
+                                    <span>{warning}</span>
+                                  </span>
+                                ))}
+                              {result?.explanations &&
+                                result.explanations.map(
+                                  (explanation, index) => (
+                                    <div key={index}>{explanation}</div>
+                                  ),
+                                )}
+                            </div>
+                          </article>
+                        </form>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
               {tab === "config" && (
-                <div>
+                <div style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}>
                   <div className="field">
                     <label className="label">node label</label>
                     <div className="checkboxes">
@@ -514,14 +510,18 @@ function App() {
                   </div>
                 </div>
               )}
-              {tab === "inspector" && <></>}
+              {tab === "inspector" && (
+                <div
+                  style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}
+                ></div>
+              )}
               {tab === "pin" && (
-                <>
+                <div style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}>
                   <div>pinned nodes</div>
                   {Object.keys(pins).map((key, index) => (
                     <div key={index}>{key}</div>
                   ))}
-                </>
+                </div>
               )}
             </div>
           </div>
