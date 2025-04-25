@@ -201,6 +201,55 @@ function GraphEvents(props: {
   return null;
 }
 
+function Prompt(props: {
+  index: number;
+  prompt: string;
+  result?: PromptResult;
+  submitAction: (payload: FormData) => void;
+}) {
+  const articleClassName = props.result?.error
+    ? "message is-danger"
+    : props.result?.warnings
+      ? "message is-warning"
+      : "message is-success";
+
+  return (
+    <form action={props.submitAction}>
+      <input type="hidden" name="action" value="remove" />
+      <input type="hidden" name="index" value={props.index} />
+      <article className={articleClassName}>
+        <div className="message-header">
+          {props.prompt}
+          <button className="delete" />
+        </div>
+        <div className="message-body">
+          {props.result?.error && (
+            <span key={props.index} className="icon-text">
+              <span className="icon has-text-danger">
+                <i className="fas fa-ban"></i>
+              </span>
+              <span>{props.result.error}</span>
+            </span>
+          )}
+          {props.result?.warnings &&
+            props.result.warnings.map((warning, index) => (
+              <span key={index} className="icon-text">
+                <span className="icon has-text-warning">
+                  <i className="fas fa-triangle-exclamation"></i>
+                </span>
+                <span>{warning}</span>
+              </span>
+            ))}
+          {props.result?.explanations &&
+            props.result.explanations.map((explanation, index) => (
+              <div key={index}>{explanation}</div>
+            ))}
+        </div>
+      </article>
+    </form>
+  );
+}
+
 function App() {
   const [state, submitAction] = useActionState(updatePrompts, {});
 
@@ -375,50 +424,14 @@ function App() {
                 <div style={{ flexGrow: 1, flexBasis: 0, overflowY: "scroll" }}>
                   {state.prompts?.map((prompt, index) => {
                     const result = state.promptResults?.[index];
-
-                    const articleClassName = result?.error
-                      ? "message is-danger"
-                      : result?.warnings
-                        ? "message is-warning"
-                        : "message is-success";
-
                     return (
                       <div className="block" key={index}>
-                        <form action={submitAction}>
-                          <input type="hidden" name="action" value="remove" />
-                          <input type="hidden" name="index" value={index} />
-                          <article className={articleClassName}>
-                            <div className="message-header">
-                              {prompt}
-                              <button className="delete" />
-                            </div>
-                            <div className="message-body">
-                              {result?.error && (
-                                <span key={index} className="icon-text">
-                                  <span className="icon has-text-danger">
-                                    <i className="fas fa-ban"></i>
-                                  </span>
-                                  <span>{result.error}</span>
-                                </span>
-                              )}
-                              {result?.warnings &&
-                                result.warnings.map((warning, index) => (
-                                  <span key={index} className="icon-text">
-                                    <span className="icon has-text-warning">
-                                      <i className="fas fa-triangle-exclamation"></i>
-                                    </span>
-                                    <span>{warning}</span>
-                                  </span>
-                                ))}
-                              {result?.explanations &&
-                                result.explanations.map(
-                                  (explanation, index) => (
-                                    <div key={index}>{explanation}</div>
-                                  ),
-                                )}
-                            </div>
-                          </article>
-                        </form>
+                        <Prompt
+                          index={index}
+                          prompt={prompt}
+                          result={result}
+                          submitAction={submitAction}
+                        />
                       </div>
                     );
                   })}
